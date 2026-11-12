@@ -9,6 +9,7 @@ Refuses to write into a folder that already has files. Standard library only.
 Ends by making the vault a local git repository (no remote), as the Obsidian Git plugin
 expects; pass --no-git to skip that.
 """
+import os
 import argparse, datetime, json, pathlib, re, shutil, subprocess, sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from new_course import add_course, slug
@@ -140,4 +141,7 @@ SORT file.name DESC
     print(f"Built vault at {dest}")
 
 if __name__ == "__main__":
+    if os.name == "nt" and not sys.flags.utf8_mode:  # Windows: read and print UTF-8, here and in child scripts
+        import subprocess
+        sys.exit(subprocess.call([sys.executable, *sys.argv], env={**os.environ, "PYTHONUTF8": "1"}))
     main()

@@ -7,6 +7,7 @@ and color coding: every folder color, and for each course a CSS variable, a file
 a note title color and a graph color group.
 Usage: python3 scripts/verify_vault.py "<vault>" [--json]
 """
+import os
 import json, pathlib, re, sys
 
 REQUIRED = ["00 Home", "01 Fleeting/AI Drafts", "02 Literature", "03 Permanent", "04 Maps", "05 Projects", "06 Daily",
@@ -100,4 +101,7 @@ def main():
     sys.exit(0 if total == 0 else 1)
 
 if __name__ == "__main__":
+    if os.name == "nt" and not sys.flags.utf8_mode:  # Windows: read and print UTF-8, here and in child scripts
+        import subprocess
+        sys.exit(subprocess.call([sys.executable, *sys.argv], env={**os.environ, "PYTHONUTF8": "1"}))
     main()

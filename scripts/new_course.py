@@ -17,6 +17,7 @@ Usage:
 Close Obsidian first, or it may save its in-memory graph settings over graph.json.
 Standard library only. Never overwrites an existing course.
 """
+import os
 import argparse, datetime, json, pathlib, re, sys
 
 SUBFOLDERS = ["01 Syllabus & Schedule", "02 Lecture Slides", "03 Readings & Cases", "04 Assignments",
@@ -233,6 +234,9 @@ Readings and other things to do before class ({when}). Graded deadlines stay in 
     return folder
 
 if __name__ == "__main__":
+    if os.name == "nt" and not sys.flags.utf8_mode:  # Windows: read and print UTF-8, here and in child scripts
+        import subprocess
+        sys.exit(subprocess.call([sys.executable, *sys.argv], env={**os.environ, "PYTHONUTF8": "1"}))
     a = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     a.add_argument("vault"); a.add_argument("--code", required=True); a.add_argument("--name", default="")
     a.add_argument("--term", required=True); a.add_argument("--days", nargs="*", default=[])

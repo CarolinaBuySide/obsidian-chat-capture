@@ -15,10 +15,15 @@ import json
 import os
 import sys
 import tarfile
+import tempfile
+
+if os.name == "nt" and not sys.flags.utf8_mode:  # Windows: read and print UTF-8
+    import subprocess
+    sys.exit(subprocess.call([sys.executable, *sys.argv], env={**os.environ, "PYTHONUTF8": "1"}))
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VAULT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
-OUT = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else "/tmp/canvas_sync_inputs.tgz"
+OUT = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.join(tempfile.gettempdir(), "canvas_sync_inputs.tgz")
 SKIP_NAMES = {".DS_Store"}
 
 with open(os.path.join(HERE, "courses.json"), encoding="utf-8") as f:
@@ -41,7 +46,7 @@ for c in cfg.get("courses", []) + cfg.get("watch_only", []):
             if n in SKIP_NAMES or n.startswith("~$") or n.startswith("._"):
                 continue
             full = os.path.join(dirpath, n)
-            rel = os.path.relpath(full, VAULT)
+            rel = os.path.relpath(full, VAULT).replace(os.sep, "/")
             st = os.stat(full)
             files.append({"path": rel, "size": st.st_size, "mtime": int(st.st_mtime)})
             if n.endswith(".md"):

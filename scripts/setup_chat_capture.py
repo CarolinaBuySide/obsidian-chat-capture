@@ -39,10 +39,15 @@ CLOUD_INSTRUCTION = ("At the end of any substantive chat (decisions, plans, rese
 
 def api_key(vault):
     cfg = vault / ".obsidian/plugins/obsidian-local-rest-api/data.json"
-    try:
-        key = json.loads(cfg.read_text()).get("apiKey")
-    except (OSError, ValueError):
-        key = None
+    key = None
+    for _ in range(20):  # the plugin writes its key a moment after it first loads
+        try:
+            key = json.loads(cfg.read_text(encoding="utf-8")).get("apiKey")
+        except (OSError, ValueError):
+            key = None
+        if key:
+            break
+        time.sleep(1.5)
     if not key:
         sys.exit("No API key yet. Open the vault in Obsidian with the Local REST API plugin enabled "
                  "(obsidian_setup.py enable), then run this again.")
@@ -111,17 +116,24 @@ def need_node(app):
 def connect(vault, apps):
     key = api_key(vault)
     home = pathlib.Path.home()
-    bearer = f"Authorization: Bearer {key}"
-    remote = {"command": "npx", "args": ["-y", "mcp-remote@latest", MCP, "--header", bearer],
-              "env": {"NODE_TLS_REJECT_UNAUTHORIZED": "0"}}
+    # Every app gets the same stdio bridge: npx mcp-remote. Direct HTTPS fails in some apps because the
+    # plugin's certificate is self-signed, and the key travels in an env var so no argument has a space.
+    npx = ["cmd", "/c", "npx"] if platform.system() == "Windows" else ["npx"]
+    args = [*npx[1:], "-y", "mcp-remote@latest", MCP, "--header", "Authorization:${AUTH_HEADER}"]
+    env = {"AUTH_HEADER": f"Bearer {key}", "NODE_TLS_REJECT_UNAUTHORIZED": "0"}
+    remote = {"command": npx[0], "args": args, "env": env}
     for app in apps:
         print(f"{app}:")
+        need_node(app)
         if app == "claude-code":
             if not shutil.which("claude"):
                 print("  skipped: the `claude` command is not installed."); continue
             subprocess.run(["claude", "mcp", "remove", "--scope", "user", "obsidian"], capture_output=True)
-            r = subprocess.run(["claude", "mcp", "add", "--scope", "user", "--transport", "http", "obsidian", MCP,
-                                "--header", bearer], capture_output=True, text=True)
+            # Claude Code expands ${...} itself, so it gets the header written out instead of the env var.
+            literal = [x.replace("${AUTH_HEADER}", " " + env["AUTH_HEADER"]) for x in args]
+            cc = {"type": "stdio", "command": npx[0], "args": literal, "env": {"NODE_TLS_REJECT_UNAUTHORIZED": "0"}}
+            r = subprocess.run(["claude", "mcp", "add-json", "--scope", "user", "obsidian", json.dumps(cc)],
+                               capture_output=True, text=True)
             print("  added the obsidian MCP server" if r.returncode == 0 else "  FAILED to add the MCP server (run `claude mcp list` to inspect)")
             copy_skill(home / ".claude" / "skills")
         elif app == "claude-desktop":
@@ -131,25 +143,25 @@ def connect(vault, apps):
                 p = pathlib.Path(os.environ.get("APPDATA", home / "AppData/Roaming")) / "Claude/claude_desktop_config.json"
             else:
                 p = home / ".config/Claude/claude_desktop_config.json"
-            need_node(app); merge_json(p, remote)
+            merge_json(p, remote)
             print(f"  added the obsidian MCP server to {p}")
             print("  still to do by hand: zip skills/obsidian-chat-capture and upload it in Claude under Customize -> Skills, then restart Claude.")
         elif app == "cursor":
             p = home / ".cursor/mcp.json"
-            merge_json(p, {"url": MCP, "headers": {"Authorization": f"Bearer {key}"}})
+            merge_json(p, remote)
             print(f"  added the obsidian MCP server to {p}. Restart Cursor.")
         elif app == "codex":
             p = home / ".codex/config.toml"
-            text = p.read_text() if p.is_file() else ""
+            text = p.read_text(encoding="utf-8") if p.is_file() else ""
             if "[mcp_servers.obsidian]" in text:
                 print(f"  {p} already has [mcp_servers.obsidian]; left as it is.")
             else:
-                backup(p); need_node(app)
+                backup(p)
                 p.parent.mkdir(parents=True, exist_ok=True)
                 p.write_text(text.rstrip("\n") + ("\n\n" if text.strip() else "") + "[mcp_servers.obsidian]\n"
-                             'command = "npx"\n'
-                             f'args = ["-y", "mcp-remote@latest", "{MCP}", "--header", "{bearer}"]\n'
-                             'env = { NODE_TLS_REJECT_UNAUTHORIZED = "0" }\n')
+                             f"command = {json.dumps(npx[0])}\n"
+                             f"args = {json.dumps(args)}\n"
+                             "env = { " + ", ".join(f"{k} = {json.dumps(v)}" for k, v in env.items()) + " }\n", encoding="utf-8")
                 print(f"  added the obsidian MCP server to {p}")
             copy_skill(home / ".codex" / "skills")
     print("\nFor automatic capture, add this line to each app's custom instructions:\n  " + INSTRUCTION)
@@ -214,4 +226,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if os.name == "nt" and not sys.flags.utf8_mode:  # Windows: read and print UTF-8, here and in child scripts
+        import subprocess
+        sys.exit(subprocess.call([sys.executable, *sys.argv], env={**os.environ, "PYTHONUTF8": "1"}))
     main()

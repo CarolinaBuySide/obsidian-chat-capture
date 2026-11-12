@@ -11,6 +11,7 @@ Graph Groups ships inside the template, so it is never downloaded. Like Obsidian
 browser, it reads each plugin's manifest.json on GitHub and downloads that release's files.
 Standard library only; works on macOS, Windows and Linux.
 """
+import os
 import argparse, io, json, pathlib, sys, tarfile, urllib.request
 
 REPOS = {
@@ -106,4 +107,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if os.name == "nt" and not sys.flags.utf8_mode:  # Windows: read and print UTF-8, here and in child scripts
+        import subprocess
+        sys.exit(subprocess.call([sys.executable, *sys.argv], env={**os.environ, "PYTHONUTF8": "1"}))
     main()

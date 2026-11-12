@@ -1,0 +1,55 @@
+name: test
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scripts:
+    name: scripts (${{ matrix.os }}, Python ${{ matrix.python }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.12"]
+        include:
+          - { os: ubuntu-latest, python: "3.9" }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}" }
+      - name: Build a student and a non-student vault, verify both
+        shell: bash
+        run: |
+          python scripts/build_vault.py --answers blueprint/answers.example.json --dest "$RUNNER_TEMP/student vault"
+          python scripts/verify_vault.py "$RUNNER_TEMP/student vault"
+          python -c "import json; a=json.load(open('blueprint/answers.example.json')); a['student']=False; a.pop('courses'); json.dump(a, open('ns.json','w'))"
+          python scripts/build_vault.py --answers ns.json --dest "$RUNNER_TEMP/plain vault"
+          python scripts/verify_vault.py "$RUNNER_TEMP/plain vault"
+      - name: Add a course later
+        shell: bash
+        run: |
+          python scripts/new_course.py "$RUNNER_TEMP/student vault" --code "HIST 101" --name "World History" --term "Fall 2026" --days Mon Wed --start 10:00 --end 10:50 --term-start 2026-08-17 --term-end 2026-12-02 --color "#D4A017" --color-name Amber
+          python scripts/verify_vault.py "$RUNNER_TEMP/student vault"
+      - name: Canvas sync against a fake Canvas
+        run: python tests/test_canvas_sync.py
+  app:
+    name: real Obsidian (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Linux display packages
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y xvfb libnss3 libasound2t64 libgbm1 libgtk-3-0
+      - name: Build, turn on, save chats, check colors
+        run: python tests/test_app.py --install --watcher

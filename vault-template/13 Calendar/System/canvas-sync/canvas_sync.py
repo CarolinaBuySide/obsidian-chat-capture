@@ -52,6 +52,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import posixpath
 import re
 import shutil
 import subprocess
@@ -810,10 +811,10 @@ def main():
             if why == "updated":
                 dest = old["path"]
                 base, ext = os.path.splitext(os.path.basename(old["path"]))
-                older = os.path.join(os.path.dirname(old["path"]), "Older versions",
+                older = posixpath.join(posixpath.dirname(old["path"]), "Older versions",
                                      f"{base} (before {today.isoformat()}){ext}")
             else:
-                dest = os.path.join(folder, CATEGORY[cat], sub, x["name"]) if sub else os.path.join(folder, CATEGORY[cat], x["name"])
+                dest = posixpath.join(folder, CATEGORY[cat], sub, x["name"]) if sub else posixpath.join(folder, CATEGORY[cat], x["name"])
                 older = None
             planned.append((x, why, old, dest, cat))
             imports.append({"course": code, "host": c["_host"], "file_id": x["id"], "name": x["name"], "size": x.get("size"),
@@ -848,7 +849,7 @@ def main():
             topic = topic[:1].upper() + topic[1:]
             label = f"{kind} {num}" if kind else None
             title = safe_name(f"{code} - {label} - {topic}" if label else f"{code} - {topic}")[:120]
-            path = os.path.join(os.path.dirname(deck_path), title + ".md")
+            path = posixpath.join(posixpath.dirname(deck_path), title + ".md")
             posted = parse_utc(x.get("created_at") or x.get("updated_at"))
             posted_l = posted.astimezone(tz) if posted else now
             nxt = next_class(meetings, posted_l)
@@ -908,7 +909,7 @@ def main():
             bits.append(f"{'updated' if why == 'updated' else 'posted'} on Canvas {fmt_md(posted_l)}")
             if ln:
                 bits.append(f"notes: [[{ln[1]}]]")
-            sub = os.path.relpath(os.path.dirname(dest), folder)
+            sub = posixpath.relpath(posixpath.dirname(dest), folder)
             where = f" (in `{sub}`)" if sub.count("/") >= 1 else ""
             return f"- [[{x['name']}|{os.path.splitext(x['name'])[0]}]] · " + " · ".join(bits) + where
 
@@ -1198,4 +1199,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if os.name == "nt" and not sys.flags.utf8_mode:  # Windows: read and print UTF-8, here and in child scripts
+        import subprocess
+        sys.exit(subprocess.call([sys.executable, *sys.argv], env={**os.environ, "PYTHONUTF8": "1"}))
     main()
