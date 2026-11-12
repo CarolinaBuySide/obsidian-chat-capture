@@ -66,4 +66,5 @@ jobs:
       - name: Build, turn on, save chats, check colors
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          PYTHONUTF8: "1"
         run: python tests/test_app.py --install --watcher

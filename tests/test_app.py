@@ -54,6 +54,8 @@ def install():
         shutil.rmtree("/Applications/Obsidian.app", ignore_errors=True)
         subprocess.run(["cp", "-R", f"{mount}/Obsidian.app", "/Applications/"], check=True)
         subprocess.run(["hdiutil", "detach", mount], capture_output=True)
+        subprocess.run(["xattr", "-dr", "com.apple.quarantine", "/Applications/Obsidian.app"], capture_output=True)
+        print("installed:", sorted(os.listdir("/Applications/Obsidian.app/Contents/MacOS")), flush=True)
         return "/Applications/Obsidian.app/Contents/MacOS/Obsidian", None
     if SYSTEM == "Windows":
         exe = fetch(f"Obsidian-{ver}.exe")
@@ -75,7 +77,7 @@ def install():
 
 def launch(exe):
     if SYSTEM == "Darwin":
-        subprocess.run(["open", "-a", "Obsidian"], check=True)
+        subprocess.run(["open", "/Applications/Obsidian.app"], check=True)
     elif SYSTEM == "Windows":
         procs.append(subprocess.Popen([exe or "Obsidian.exe"], creationflags=0x00000008 | 0x00000200))
     else:
@@ -111,7 +113,7 @@ def mcp_roundtrip(config_path, note):
     srv = json.loads(pathlib.Path(config_path).read_text(encoding="utf-8"))["mcpServers"]["obsidian"]
     p = subprocess.Popen([srv["command"], *srv["args"]], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                          env={**os.environ, **srv.get("env", {})}, text=True, encoding="utf-8")
-    threading.Timer(180, p.kill).start()
+    guard = threading.Timer(180, p.kill); guard.daemon = True; guard.start()
     n = [0]
     def rpc(method, params=None, notify=False):
         n[0] += 1
@@ -154,6 +156,7 @@ def mcp_roundtrip(config_path, note):
     _, err = tool("vault_append", path="04 Maps/AI Chats MOC.md",
                   content="\n- [[2026-01-01 - MCP Test Chat]] → [[Home]]\n- [[2026-01-02 - Script Test Chat]] → [[Home]]\n")
     assert not err, "pointer lines appended to the AI Chats map"
+    guard.cancel()
     p.kill()
 
 
@@ -229,3 +232,5 @@ finally:
     for p in procs:
         try: p.kill()
         except Exception: pass
+sys.stdout.flush()
+os._exit(0)  # do not wait on helper processes that outlive the test
