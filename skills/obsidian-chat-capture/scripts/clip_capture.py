@@ -60,6 +60,31 @@ def strip_frontmatter(text):
     return text
 
 
+def index_note(vault, path, moc="04 Maps/AI Chats MOC.md", heading="## Copied in from other apps"):
+    """List a new note in the vault's AI Chats map, if it has one, so the note is not left unlinked."""
+    moc_path = os.path.join(vault, moc)
+    stem = os.path.splitext(os.path.basename(path))[0]
+    try:
+        with open(moc_path, encoding="utf-8") as f:
+            text = f.read()
+        if f"[[{stem}" in text:
+            return
+        line = f"- [[{stem}]]\n"
+        if heading in text:
+            head, rest = text.split(heading, 1)
+            first, _, after = rest.partition("\n")
+            text = head + heading + first + "\n" + line + after
+        elif "\n← [[Home]]" in text:
+            head, tail = text.rsplit("\n← [[Home]]", 1)
+            text = head.rstrip("\n") + f"\n\n{heading}\n{line}\n← [[Home]]" + tail
+        else:
+            text = text.rstrip("\n") + f"\n\n{heading}\n{line}"
+        with open(moc_path, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text)
+    except OSError:
+        pass
+
+
 def handle(text, vault, folder, logfile, notify_fn=notify):
     """Return a short status string. Writes at most one file."""
     vault = os.path.realpath(vault)
@@ -93,6 +118,7 @@ def handle(text, vault, folder, logfile, notify_fn=notify):
         with open(path, "x", encoding="utf-8") as f:
             f.write(body.rstrip() + "\n")
         action = "Saved"
+        index_note(vault, path)
     log(logfile, f"{action.lower()}\t{rel}")
     notify_fn(f"{action} {rel}")
     return action.lower()
