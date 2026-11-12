@@ -40,7 +40,7 @@ Downloads Dataview, Templater, Calendar, Obsidian Git and Local REST API, and ad
 
 ```bash
 python3 scripts/obsidian_setup.py register "<vault>"   # Obsidian must be quit first
-# open Obsidian (macOS: open -a Obsidian). The new vault opens on its own.
+# open Obsidian (macOS: open -a Obsidian; Windows: start "" "%LOCALAPPDATA%\Programs\Obsidian\Obsidian.exe"). The new vault opens on its own.
 python3 scripts/obsidian_setup.py enable "<vault>"
 python3 scripts/obsidian_setup.py check "<vault>"      # done when it prints PASS
 ```
@@ -60,7 +60,8 @@ python3 scripts/setup_chat_capture.py watcher "<vault>"                    # mac
 python3 scripts/setup_chat_capture.py instructions
 ```
 
-- `connect` supports `claude-code`, `claude-desktop`, `cursor` and `codex`. It writes the API key straight into the app's config. Never print the key, read the plugin's settings file aloud, or ask the user to paste the key into a chat.
+- `connect` supports `claude-code`, `claude-desktop`, `cursor` and `codex`, and needs Node.js (it connects each app through `npx mcp-remote`). If `test` says the note did not land in the vault folder, another open vault is answering on the same port: close that vault's window and run it again.
+- It writes the API key straight into the app's config. Never print the key, read the plugin's settings file aloud, or ask the user to paste the key into a chat.
 - For Perplexity, ChatGPT and Claude on the web, follow that app's section in [`skills/obsidian-chat-capture/references/setup.md`](skills/obsidian-chat-capture/references/setup.md). They need the skill folder uploaded as a zip.
 - Give the user the line from `instructions` to paste into each app's custom instructions. That line is what makes capture automatic.
 - Prove it: in one connected app, ask it to save a short test chat, and check that a `YYYY-MM-DD - Topic.md` note appeared in `11 AI Chats`. If you can't run that app, tell the user how to try it.

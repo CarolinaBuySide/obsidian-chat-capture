@@ -1,5 +1,7 @@
 # Obsidian AI Vault
 
+[![test](https://github.com/Karmani-MR/obsidian-chat-capture/actions/workflows/test.yml/badge.svg)](https://github.com/Karmani-MR/obsidian-chat-capture/actions/workflows/test.yml)
+
 A blueprint your AI can use to build you an organized Obsidian vault. It's taken from a real student vault that's used every day: the template holds that vault's actual calendar code, graph plugin, settings, templates and AI operating manual, with the personal content removed. You get numbered folders, a circular graph centered on Home with one colored starburst per area and per course, weekly and monthly calendars, a standard folder for every course, and rules that tell every AI app how to read and write your notes safely.
 
 It also includes [`obsidian-chat-capture`](skills/obsidian-chat-capture/), a skill that saves the useful parts of AI chats into the vault.
@@ -77,7 +79,17 @@ Details for each app are in [`setup.md`](skills/obsidian-chat-capture/references
 
 ## What's tested
 
-Built on Linux with Obsidian 1.15.0 on 2026-11-11: student and non-student builds pass `verify_vault.py`; `obsidian_setup.py check` passes inside the running app (all six plugins loaded, colors on, Templater filling new notes, Home and both calendars rendering, REST API answering); `setup_chat_capture.py test` writes, reads back and deletes a note; `add_event.py` adds and lists events. The Canvas sync passes `tests/run_canvas_test.sh` against a fake Canvas (first sync, a no-change sync, a moved due date and a new deck), and its token reader returns the same data as the original browser reader on that fake. It has not been run against a real school's Canvas in this form; the planner inside it is the one the original vault runs. Not yet run: `obsidian_setup.py` and the clipboard-watcher installer on a Mac (the Obsidian commands they use were run by hand on macOS with Obsidian 1.13.7, and the watcher's login item matches the one on the original Mac), and anything on Windows.
+Every change runs the whole setup on fresh macOS, Windows and Linux machines ([test runs](https://github.com/Karmani-MR/obsidian-chat-capture/actions/workflows/test.yml)). Each machine downloads the current Obsidian (1.15.0 on 2026-11-11), then does what `AGENTS.md` tells an AI to do:
+
+- builds a student vault and a non-student vault, adds a course later, and passes `verify_vault.py` (also on the Python 3.9 that ships with macOS);
+- installs the plugins, registers the vault, opens the real app, and passes `obsidian_setup.py check`: all six plugins loaded, folder and course colors showing, Templater filling new notes, Home and both calendars rendering, the Local REST API answering;
+- runs `setup_chat_capture.py connect`, then acts as an AI app using the connection it wrote: lists the vault, saves a chat note, appends to it and reads it back;
+- on macOS, installs the clipboard watcher, copies a note block and finds it saved in `11 AI Chats`;
+- runs a Canvas sync against a stand-in Canvas server: first sync, a no-change sync, a moved due date and a new slide deck.
+
+To run it yourself: `python3 tests/test_app.py --install` (it installs Obsidian on the machine and quits any open Obsidian window) and `python3 tests/test_canvas_sync.py`.
+
+Two things can't be tested by a machine alone. The Canvas sync's access-token reader has run only against the stand-in server, where it returns the same data as the browser reader the original vault uses with real Canvas; the planner behind it is the original vault's own. And the AI apps themselves (Claude Desktop, Cursor, Codex) aren't opened in the test; it checks the connection file each one reads, and Claude Code was checked by hand to show the vault as connected.
 
 ## Privacy
 
