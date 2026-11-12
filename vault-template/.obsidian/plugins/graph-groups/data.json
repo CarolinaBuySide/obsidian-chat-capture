@@ -1,0 +1,91 @@
+{
+  "version": 4,
+  "colorFiles": true,
+  "groupPhysics": true,
+  "pinCenter": true,
+  "seedLayout": true,
+  "bigCenter": true,
+  "hide": [
+    "^13 Calendar/System/"
+  ],
+  "centerXY": [
+    0,
+    0
+  ],
+  "groups": {
+    "center": "00 Home/Home.md",
+    "currentHub": "^12 School/(?!Past Courses/)(?!_)([^/]+)/([^/]+)/[^/]+ Materials\\.md$",
+    "pastHub": "^12 School/Past Courses/([^/]+)/[^/]+ Materials\\.md$",
+    "refHub": "^12 School/(_[^/]+)/[^/]+ Materials\\.md$",
+    "flower": true,
+    "currentParent": "04 Maps/School MOC.md",
+    "pastParent": "12 School/School Library.md",
+    "satellites": [
+      "04 Maps/{code} MOC.md"
+    ],
+    "currentSatellites": [
+      "13 Calendar/Classes/{code} Class.md",
+      "13 Calendar/Prep/{code} Prep.md",
+      "re:^13 Calendar/Events/[^/]* - {code}[^/]*\\.md$"
+    ],
+    "branches": [
+      {
+        "name": "AI Chats",
+        "hub": "04 Maps/AI Chats MOC.md",
+        "match": "^11 AI Chats/"
+      },
+      {
+        "name": "Calendar",
+        "hub": "04 Maps/Calendar MOC.md",
+        "match": "^(13 Calendar/|0[67] (Daily|Weekly)/)"
+      },
+      {
+        "name": "Projects",
+        "hub": "00 Home/Top of Mind.md",
+        "match": "^05 Projects/"
+      },
+      {
+        "name": "Agent",
+        "hub": "04 Maps/AI Agent MOC.md",
+        "match": "^00 Home/Agent/"
+      },
+      {
+        "name": "Knowledge",
+        "hub": "04 Maps/Note-taking MOC.md",
+        "match": "^0[123] ",
+        "split": "^(0[123]) "
+      },
+      {
+        "name": "Archive",
+        "hub": "auto",
+        "match": "^08 Archive/"
+      },
+      {
+        "name": "Home",
+        "hub": "center",
+        "match": "^(00 Home/|04 Maps/|[^/]+$)"
+      }
+    ],
+    "flowerOrder": [
+      "Calendar",
+      "AI Chats",
+      "Projects",
+      "Agent",
+      "Knowledge",
+      "Archive",
+      "Current classes",
+      "Past classes",
+      "School admin"
+    ],
+    "flowerStart": 200,
+    "directions": {
+      "School": 0,
+      "Calendar": 300,
+      "AI Chats": 245,
+      "Projects": 190,
+      "Archive": 150,
+      "Knowledge": 115,
+      "Agent": 70
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Alex Student",
+  "role": "Undergraduate business student interested in investing and AI",
+  "timezone": "America/New_York",
+  "answer_style": "Short and direct, with the path of anything changed.",
+  "student": true,
+  "term": "Fall 2026",
+  "areas": [
+    {"name": "Investing", "description": "Stock research, pitches and portfolio notes."},
+    {"name": "Career", "description": "Recruiting, networking and interview prep."},
+    {"name": "Clubs", "description": "Club roles, meetings and projects."}
+  ],
+  "courses": [
+    {"code": "ECON 325", "name": "Entrepreneurship", "days": ["Tue", "Thu"], "start": "11:00", "end": "12:15",
+     "location": "Fetzer 109", "instructor": "", "term_start": "2026-08-17", "term_end": "2026-12-02"},
+    {"code": "FIN 410", "name": "Derivatives", "days": ["Tue", "Thu"], "start": "09:30", "end": "10:45",
+     "location": "Room 2550", "term_start": "2026-10-12", "term_end": "2026-12-02"}
+  ],
+  "canvas_hosts": ["school.instructure.com"],
+  "chat_capture": true,
+  "ai_apps": ["Claude Code", "ChatGPT"],
+  "local_history": true,
+  "smart_connections": false
+}

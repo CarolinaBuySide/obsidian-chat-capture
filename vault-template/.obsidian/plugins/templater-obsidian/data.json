@@ -1,0 +1,60 @@
+{
+  "data_version": 2,
+  "command_timeout": 5,
+  "templates_folder": "09 Templates",
+  "templates_pairs": [],
+  "trigger_on_file_creation_mode": "folder",
+  "auto_jump_to_cursor": true,
+  "jump_to_cursor_after_file_name": false,
+  "shell_path": "",
+  "user_scripts_folder": "",
+  "folder_templates": [
+    {
+      "folder": "01 Fleeting",
+      "template": "09 Templates/Fleeting Note.md"
+    },
+    {
+      "folder": "02 Literature",
+      "template": "09 Templates/Literature Note.md"
+    },
+    {
+      "folder": "03 Permanent",
+      "template": "09 Templates/Permanent Note.md"
+    },
+    {
+      "folder": "04 Maps",
+      "template": "09 Templates/Map of Content.md"
+    },
+    {
+      "folder": "05 Projects",
+      "template": "09 Templates/Project.md"
+    },
+    {
+      "folder": "06 Daily",
+      "template": "09 Templates/Daily Note.md"
+    },
+    {
+      "folder": "07 Weekly",
+      "template": "09 Templates/Weekly Review.md"
+    }
+  ],
+  "file_templates": [],
+  "syntax_highlighting": true,
+  "syntax_highlighting_mobile": false,
+  "enabled_templates_hotkeys": [
+    "09 Templates/Fleeting Note.md",
+    "09 Templates/Literature Note.md",
+    "09 Templates/Permanent Note.md"
+  ],
+  "startup_templates": [],
+  "intellisense_render": "1",
+  "ignore_folders_on_creation": [
+    {
+      "folder": "09 Templates"
+    },
+    {
+      "folder": "10 Attachments"
+    }
+  ],
+  "trigger_on_file_creation": false
+}

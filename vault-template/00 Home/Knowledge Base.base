@@ -1,0 +1,73 @@
+filters:
+  and:
+    - file.ext == "md"
+    - type.isTruthy()
+    - type != "dashboard"
+    - not:
+        - file.inFolder("09 Templates")
+properties:
+  file.name:
+    displayName: Note
+  type:
+    displayName: Type
+  status:
+    displayName: Status
+  maturity:
+    displayName: Maturity
+  created:
+    displayName: Created
+views:
+  - type: table
+    name: Inbox
+    filters:
+      and:
+        - file.inFolder("01 Fleeting")
+        - status == "inbox"
+    order:
+      - file.name
+      - created
+      - captured
+    sort:
+      - property: created
+        direction: ASC
+  - type: table
+    name: Literature
+    filters:
+      and:
+        - file.inFolder("02 Literature")
+    groupBy:
+      property: status
+      direction: DESC
+    order:
+      - file.name
+      - source-type
+      - author
+      - year
+      - status
+  - type: table
+    name: Permanent
+    filters:
+      and:
+        - file.inFolder("03 Permanent")
+    groupBy:
+      property: maturity
+      direction: ASC
+    order:
+      - file.name
+      - maturity
+      - created
+      - file.mtime
+  - type: table
+    name: All notes by type
+    filters:
+      and:
+        - type != "daily"
+        - type != "weekly"
+    groupBy:
+      property: type
+      direction: ASC
+    order:
+      - file.name
+      - type
+      - file.folder
+      - file.mtime

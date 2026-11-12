@@ -14,32 +14,27 @@ Obsidian must be open for the server to answer.
 
 ## 2. App side
 
-Replace `<API_KEY>` yourself in each config file. Restart the app afterward.
+Replace `<API_KEY>` yourself in each config file. Restart the app afterward. In the blueprint repo, `python3 scripts/setup_chat_capture.py connect "<vault>" --app <app>` writes these for you without showing the key.
+
+Every app below uses the same bridge, `npx mcp-remote` (needs Node.js). Connecting an app straight to the HTTPS address fails in some apps (Claude Code reports "fetch failed") because the plugin's certificate is self-signed; the bridge with `NODE_TLS_REJECT_UNAUTHORIZED=0` accepts it. On Windows, use `"command": "cmd"` and put `"/c", "npx"` at the start of `args`.
 
 **Claude Code**
 ```sh
-claude mcp add --scope user --transport http obsidian https://127.0.0.1:27124/mcp/ \
-  --header "Authorization: Bearer <API_KEY>"
+claude mcp add-json --scope user obsidian '{"type":"stdio","command":"npx","args":["-y","mcp-remote@latest","https://127.0.0.1:27124/mcp/","--header","Authorization: Bearer <API_KEY>"],"env":{"NODE_TLS_REJECT_UNAUTHORIZED":"0"}}'
 ```
-Install the skill: copy `skills/obsidian-chat-capture/` to `~/.claude/skills/`.
+Check with `claude mcp list` (it should say Connected). Install the skill: copy `skills/obsidian-chat-capture/` to `~/.claude/skills/`.
 
-**Claude Desktop** (needs Node.js). Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (Windows: `%APPDATA%\Claude\claude_desktop_config.json`):
+**Claude Desktop**. Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (Windows: `%APPDATA%\Claude\claude_desktop_config.json`):
 ```json
 { "mcpServers": { "obsidian": {
   "command": "npx",
-  "args": ["mcp-remote@latest", "https://127.0.0.1:27124/mcp/", "--header", "Authorization: Bearer <API_KEY>"],
-  "env": { "NODE_TLS_REJECT_UNAUTHORIZED": "0" }
+  "args": ["-y", "mcp-remote@latest", "https://127.0.0.1:27124/mcp/", "--header", "Authorization:${AUTH_HEADER}"],
+  "env": { "AUTH_HEADER": "Bearer <API_KEY>", "NODE_TLS_REJECT_UNAUTHORIZED": "0" }
 } } }
 ```
-The `env` line accepts the plugin's self-signed certificate. Alternatively, use the HTTP URL. Install the skill: zip the `obsidian-chat-capture` folder and upload it under **Customize → Skills**.
+The key sits in `env` because some apps split an argument at its space. Install the skill: zip the `obsidian-chat-capture` folder and upload it under **Customize → Skills**.
 
-**Cursor**. Edit `~/.cursor/mcp.json`:
-```json
-{ "mcpServers": { "obsidian": {
-  "url": "https://127.0.0.1:27124/mcp/",
-  "headers": { "Authorization": "Bearer <API_KEY>" }
-} } }
-```
+**Cursor**. Edit `~/.cursor/mcp.json` with the same block as Claude Desktop.
 
 **Perplexity (Mac app)**. Install the **PerplexityXPC** helper when the app prompts. Then go to **Settings → Connectors → Add Connector**, open the **Simple** tab, name the server `obsidian`, and enter this command. It needs Node.js and the HTTP server enabled:
 ```sh
@@ -51,17 +46,17 @@ In Perplexity Computer, upload the skill zip under Skills.
 ```toml
 [mcp_servers.obsidian]
 command = "npx"
-args = ["-y", "mcp-remote@latest", "https://127.0.0.1:27124/mcp/", "--header", "Authorization: Bearer <API_KEY>"]
-env = { NODE_TLS_REJECT_UNAUTHORIZED = "0" }
+args = ["-y", "mcp-remote@latest", "https://127.0.0.1:27124/mcp/", "--header", "Authorization:${AUTH_HEADER}"]
+env = { AUTH_HEADER = "Bearer <API_KEY>", NODE_TLS_REJECT_UNAUTHORIZED = "0" }
 ```
 
 **ChatGPT**. ChatGPT runs in the cloud and cannot reach a vault on your computer. Custom MCP connectors need developer mode, which OpenAI offers on Pro (read-only) and on Business, Enterprise and Edu (read and write), not on Plus. Even then, the server must be reachable over the internet with OAuth, which means a tunnel plus an OAuth layer in front of the plugin. Only do that if you accept the risk of exposing your notes. On Plus, upload the skill under **Plugins → Skills → Add → Upload from your computer**. It will hand you paste-ready notes instead of saving directly.
 
 ## 3. Turn on automatic capture (apps with vault access)
 
-Add this line to the app's custom instructions (Claude: Profile → Preferences; ChatGPT: Personalization; Perplexity: Profile → Introduce yourself):
+Claude apps auto-save substantive chats by default; adding the line below to Claude's Profile → Preferences makes it more reliable. Other apps need it in their custom instructions (ChatGPT: Personalization; Perplexity: Profile → Introduce yourself):
 
-> At the end of any substantive chat (decisions, plans, research or tasks), use the obsidian-chat-capture skill to save a short note to my Obsidian vault and tell me the path.
+> After any substantive answer (a decision, plan, checklist, analysis, research or tasks), use the obsidian-chat-capture skill to save a short note to my Obsidian vault and tell me the path. Don't wait for the chat to end.
 
 ## 4. Automatic capture from cloud apps (macOS)
 

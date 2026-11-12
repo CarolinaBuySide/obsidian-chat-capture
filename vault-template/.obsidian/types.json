@@ -1,0 +1,22 @@
+{
+  "types": {
+    "aliases": "aliases",
+    "tags": "tags",
+    "cssclasses": "multitext",
+    "type": "text",
+    "status": "text",
+    "created": "datetime",
+    "date": "date",
+    "captured": "text",
+    "source-type": "text",
+    "author": "multitext",
+    "year": "number",
+    "url": "text",
+    "maturity": "text",
+    "sources": "multitext",
+    "maps": "multitext",
+    "start": "date",
+    "due": "date",
+    "week": "text"
+  }
+}

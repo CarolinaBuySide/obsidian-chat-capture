@@ -1,47 +1,99 @@
-# Obsidian Chat Capture
+# Obsidian AI Vault
 
-An [Agent Skill](https://agentskills.io) that saves the useful part of your AI conversations, meaning decisions, takeaways and next steps, into your Obsidian vault as short, linked notes. It works in any app that supports Agent Skills and MCP: Claude Code, Claude Desktop, Cursor, Codex, Perplexity and others.
+[![test](https://github.com/Karmani-MR/obsidian-chat-capture/actions/workflows/test.yml/badge.svg)](https://github.com/Karmani-MR/obsidian-chat-capture/actions/workflows/test.yml)
 
-```
-You:  ...ok, let's go with the catalyst framing. Save this.
-AI:   Saved to Obsidian: AI Chats/2026-09-29 - HFAC Pitch Catalysts.md
-```
+A blueprint your AI can use to build you an organized Obsidian vault. It's taken from a real student vault that's used every day: the template holds that vault's actual calendar code, graph plugin, settings, templates and AI operating manual, with the personal content removed. You get numbered folders, a circular graph centered on Home with one colored starburst per area and per course, weekly and monthly calendars, a standard folder for every course, and rules that tell every AI app how to read and write your notes safely.
 
-## How it works
+It also includes [`obsidian-chat-capture`](skills/obsidian-chat-capture/), a skill that saves the useful parts of AI chats into the vault.
 
-| Piece | What it does |
-|---|---|
-| **Connector**: [Local REST API with MCP](https://github.com/coddingtonbear/obsidian-local-rest-api) (Obsidian plugin) | Runs an authenticated MCP server inside Obsidian at `127.0.0.1`, so AI apps can read and write notes. |
-| **Skill**: `skills/obsidian-chat-capture/` | Tells the AI when to save, where, in what format, what never to save, and to append rather than overwrite. |
+## Use it
 
-Each saved note gets properties (`type: ai-chat`, `source`, `created`, `related`), a few takeaways, decisions, tasks, and `[[links]]` to notes that already exist in your vault.
+Give this repo to an AI that can run code on your computer (Claude Code, Codex, Cursor, Perplexity Computer and others) and say:
 
-## Install
+> Read AGENTS.md in this repo and build me an Obsidian vault.
 
-1. **Vault:** in Obsidian, install and enable the community plugin **Local REST API with MCP**. Copy the API key from its settings.
-2. **App:** connect your AI app to `https://127.0.0.1:27124/mcp/` with the header `Authorization: Bearer <API_KEY>`. Per-app configs (Claude Code, Claude Desktop, Cursor, Perplexity, Codex, ChatGPT) are in [`references/setup.md`](skills/obsidian-chat-capture/references/setup.md).
-3. **Skill:** copy or upload `skills/obsidian-chat-capture/` into your app's skills (for example `~/.claude/skills/`), or zip the folder for apps that take uploads.
-4. **Optional, automatic mode:** add this to the app's custom instructions:
-   > At the end of any substantive chat, use the obsidian-chat-capture skill to save a short note to my Obsidian vault and tell me the path.
+The AI asks you a few questions (your life areas, which AI apps you use and, if you're a student, your courses). Then it builds the vault, installs and turns on the plugins, connects your AI apps so chats save into the vault, and runs three checks before handing it over. You need [Obsidian](https://obsidian.md/download) 1.12 or newer and Python 3.9 or newer.
 
-## Safety
-
-- The server only listens on your computer, and every request needs the API key. Never commit the key. `.gitignore` excludes common config files.
-- The skill redacts keys, passwords, recovery phrases and ID numbers. It won't save third parties' private data without asking, and it never deletes or overwrites notes.
-- Obsidian must be running for saves to work.
-
-## Without MCP
-
-`scripts/save_note.py` (Python 3, standard library only) does the same create-or-append through the REST API. For cloud apps like ChatGPT, `scripts/clip_capture.py` saves any copied note block that starts with `obsidian-capture:` (see setup.md, section 4):
+To do it yourself:
 
 ```bash
-export OBSIDIAN_API_KEY=...        # from Settings > Local REST API
-python3 skills/obsidian-chat-capture/scripts/save_note.py "AI Chats/2026-09-29 - Topic.md" < note.md
+cp blueprint/answers.example.json my-answers.json          # edit it
+V="$HOME/Documents/Obsidian Vault"
+python3 scripts/build_vault.py --answers my-answers.json --dest "$V"
+python3 scripts/install_plugins.py "$V" --obsidian-skills
+python3 scripts/obsidian_setup.py register "$V"            # with Obsidian quit; then open Obsidian
+python3 scripts/obsidian_setup.py enable "$V"
+python3 scripts/obsidian_setup.py check "$V"               # should print PASS
+python3 scripts/setup_chat_capture.py test "$V"            # should print PASS
+python3 scripts/setup_chat_capture.py connect "$V" --app claude-code
+python3 scripts/verify_vault.py "$V"                       # should print PASS
 ```
 
-## Customize
+The scripts use only Python's standard library. If you'd rather click, skip the two `obsidian_setup.py` lines after `register`, open the folder in Obsidian, and follow `00 Home/Plugin Setup Checklist`.
 
-The default folder is any root folder ending in `AI Chats` (for example `11 AI Chats`), or `AI Chats/`. Change the note shape in `templates/chat-note.md` and the rules in `SKILL.md`.
+## What you get
+
+| | |
+|---|---|
+| **Folders** | `00 Home` · `01 Fleeting` · `02 Literature` · `03 Permanent` · `04 Maps` · `05 Projects` · `06 Daily` · `07 Weekly` · `08 Archive` · `09 Templates` · `10 Attachments` · `11 AI Chats` · `12 School` · `13 Calendar` |
+| **Home** | Dashboard with every area, active courses, deadlines for the next 14 days, inbox, projects and recent AI chats |
+| **Weekly Calendar** | A time grid of classes (repeating weekly, with breaks skipped), calls, meetings and exams, with an Add event form |
+| **To-Do Calendar** | A month grid of every dated task (assignments, exams, readings, to-dos), with filters and check-off in place |
+| **Courses** | Each course gets a course map, a folder with eight numbered subfolders, a Materials note linking every file, a class note and a prep note, all in one color. Finished courses move to Past Courses and turn gray |
+| **Graph** | The bundled Graph Groups plugin pins Home in the center and lays out each area and course as its own colored starburst |
+| **AI layer** | `AGENTS.md` (read order, permissions table, how AI work is marked, conventions), AI Context, USER, Top of Mind, an append-only Agent Memory, and eight skills (Todays Focus, Weekly Review, Process Notes, Ingest, Vault Health, Write Like Me, Calendar Update, and Canvas Sync for students), also available as Claude Code slash commands |
+| **Canvas sync** | For students: pulls deadlines, new files, lecture decks and readings from any school's Canvas into the course maps, folders and calendars. Runs from a terminal with your own Canvas access token, so any AI can do it |
+| **Calendar tool** | `add_event.py`, so any AI with a shell can add, move, cancel or list events and log each change |
+| **Safety net** | Agents append instead of overwriting, anything they write is tagged `ai-assisted` until you review it, and Obsidian Git takes local snapshots every 30 minutes |
+
+The full design is in [`blueprint/VAULT-SPEC.md`](blueprint/VAULT-SPEC.md).
+
+## Repo layout
+
+```
+AGENTS.md                  step-by-step instructions for the AI doing the build
+blueprint/                 spec, interview questions, colors, how to personalize
+vault-template/            the vault itself, with {{PLACEHOLDERS}}
+scripts/
+  build_vault.py           template + answers.json → new vault
+  new_course.py            add a course (map, folder, Materials, class, prep, colors)
+  verify_vault.py          read-only check: links, orphans, placeholders, secrets
+  install_plugins.py       Dataview, Templater, Calendar, Git, Local REST API (Graph Groups is bundled)
+  obsidian_setup.py        register the vault, turn plugins on, check it renders in the app
+  setup_chat_capture.py    test saving, connect AI apps, install the clipboard watcher
+tests/                     fake Canvas and an end-to-end test of the Canvas sync
+skills/
+  obsidian-vault-builder/  Agent Skill wrapper for this blueprint
+  obsidian-chat-capture/   Agent Skill that saves chat takeaways into 11 AI Chats
+```
+
+## Chat capture
+
+AI chats save into `11 AI Chats` as short notes: the question, takeaways, decisions and next steps, linked to notes that already exist. Notes are never overwritten and secrets are redacted.
+
+- **Apps on your computer** (Claude Code, Claude Desktop, Cursor, Codex, Perplexity) reach the vault through the Local REST API plugin. `setup_chat_capture.py connect` writes the connection into each app's config without showing the key to anyone.
+- **Cloud apps** (ChatGPT, phone apps) can't reach your computer, so they end with a note block to copy. On a Mac, `setup_chat_capture.py watcher` installs a login item that saves copied blocks on its own.
+- One line in an app's custom instructions makes saving automatic (`setup_chat_capture.py instructions`).
+
+Details for each app are in [`setup.md`](skills/obsidian-chat-capture/references/setup.md).
+
+## What's tested
+
+Every change runs the whole setup on fresh macOS, Windows and Linux machines ([test runs](https://github.com/Karmani-MR/obsidian-chat-capture/actions/workflows/test.yml)). Each machine downloads the current Obsidian (1.15.0 on 2026-11-11), then does what `AGENTS.md` tells an AI to do:
+
+- builds a student vault and a non-student vault, adds a course later, and passes `verify_vault.py` (also on the Python 3.9 that ships with macOS);
+- installs the plugins, registers the vault, opens the real app, and passes `obsidian_setup.py check`: all six plugins loaded, folder and course colors showing, Templater filling new notes, Home and both calendars rendering, the Local REST API answering;
+- runs `setup_chat_capture.py connect`, then acts as an AI app using the connection it wrote: lists the vault, saves a chat note, appends to it and reads it back;
+- on macOS, installs the clipboard watcher, copies a note block and finds it saved in `11 AI Chats`;
+- runs a Canvas sync against a stand-in Canvas server: first sync, a no-change sync, a moved due date and a new slide deck.
+
+To run it yourself: `python3 tests/test_app.py --install` (it installs Obsidian on the machine and quits any open Obsidian window) and `python3 tests/test_canvas_sync.py`.
+
+Two things can't be tested by a machine alone. The Canvas sync's access-token reader has run only against the stand-in server, where it returns the same data as the browser reader the original vault uses with real Canvas; the planner behind it is the original vault's own. And the AI apps themselves (Claude Desktop, Cursor, Codex) aren't opened in the test; it checks the connection file each one reads, and Claude Code was checked by hand to show the vault as connected.
+
+## Privacy
+
+The template has no personal data. The Canvas token is typed by you into a hidden prompt and saved outside the vault; the sync only reads Canvas. `build_vault.py`, `install_plugins.py` and `verify_vault.py` only touch the destination folder, and the build refuses a folder that already has files. `obsidian_setup.py register` edits Obsidian's own settings file and `setup_chat_capture.py connect` edits the AI app's config; both keep a backup. Nothing is uploaded. Never commit API keys; `.gitignore` covers common config files.
 
 ## License
 

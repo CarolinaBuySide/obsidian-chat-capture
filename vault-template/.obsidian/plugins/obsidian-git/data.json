@@ -1,0 +1,14 @@
+{
+  "commitMessage": "manual backup: {{date}}",
+  "autoCommitMessage": "auto backup: {{date}}",
+  "autoSaveInterval": 30,
+  "differentIntervalCommitAndPush": true,
+  "autoPushInterval": 0,
+  "autoPullInterval": 0,
+  "autoPullOnBoot": false,
+  "disablePush": true,
+  "pullBeforePush": false,
+  "disablePopupsForNoChanges": true,
+  "showStatusBar": true,
+  "showedMobileNotice": true
+}

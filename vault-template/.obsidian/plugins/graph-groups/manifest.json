@@ -1,0 +1,9 @@
+{
+  "id": "graph-groups",
+  "name": "Graph Groups",
+  "version": "4.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Keeps Obsidian's live graph with Home in the middle and every group (each class, AI Chats, Calendar, Projects ...) in its own starburst. File dots take their group's color.",
+  "author": "Marc Rainone",
+  "isDesktopOnly": true
+}

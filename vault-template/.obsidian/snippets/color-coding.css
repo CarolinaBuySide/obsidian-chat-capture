@@ -1,0 +1,97 @@
+/* Color coding by note type. Palette key: 00 Home/Color Key.md */
+body {
+  --c-home: #E0A526;      /* 00 Home */
+  --c-fleeting: #E8C547;  /* 01 Fleeting (yellow; gray is reserved for past courses) */
+  --c-lit: #4A90D9;       /* 02 Literature */
+  --c-perm: #3FA66B;      /* 03 Permanent */
+  --c-map: #8E6BD1;       /* 04 Maps */
+  --c-proj: #E07B39;      /* 05 Projects */
+  --c-daily: #2BA3A3;     /* 06 Daily, 07 Weekly */
+  --c-archive: #8C7B6B;   /* 08 Archive */
+  --c-system: #6B7A8F;    /* 09 Templates, 10 Attachments */
+  --c-ai: #D6589B;        /* 11 AI Chats */
+  --c-school: #4B9CD3;    /* 12 School, current term */
+  --c-past: #8A8F98;      /* past courses (gray) */
+  /* COURSE-VARS:START */
+  /* COURSE-VARS:END */
+}
+
+/* ---------- File explorer: colored folder names + a colored rail on their notes ---------- */
+.nav-folder-title[data-path="00 Home"]        { color: var(--c-home); }
+.nav-folder-title[data-path="01 Fleeting"]    { color: var(--c-fleeting); }
+.nav-folder-title[data-path="02 Literature"]  { color: var(--c-lit); }
+.nav-folder-title[data-path="03 Permanent"]   { color: var(--c-perm); }
+.nav-folder-title[data-path="04 Maps"]        { color: var(--c-map); }
+.nav-folder-title[data-path="05 Projects"]    { color: var(--c-proj); }
+.nav-folder-title[data-path="06 Daily"],
+.nav-folder-title[data-path="07 Weekly"]      { color: var(--c-daily); }
+.nav-folder-title[data-path="08 Archive"]     { color: var(--c-archive); }
+.nav-folder-title[data-path="09 Templates"],
+.nav-folder-title[data-path="10 Attachments"] { color: var(--c-system); }
+.nav-folder-title[data-path="11 AI Chats"]    { color: var(--c-ai); }
+.nav-folder-title[data-path="00 Home"], .nav-folder-title[data-path="01 Fleeting"],
+.nav-folder-title[data-path="02 Literature"], .nav-folder-title[data-path="03 Permanent"],
+.nav-folder-title[data-path="04 Maps"], .nav-folder-title[data-path="05 Projects"],
+.nav-folder-title[data-path="06 Daily"], .nav-folder-title[data-path="07 Weekly"],
+.nav-folder-title[data-path="08 Archive"], .nav-folder-title[data-path="09 Templates"],
+.nav-folder-title[data-path="10 Attachments"], .nav-folder-title[data-path="11 AI Chats"] { font-weight: 600; }
+
+.nav-file-title[data-path^="00 Home/"]        { border-left: 3px solid var(--c-home); }
+.nav-file-title[data-path^="01 Fleeting/"]    { border-left: 3px solid var(--c-fleeting); }
+.nav-file-title[data-path^="02 Literature/"]  { border-left: 3px solid var(--c-lit); }
+.nav-file-title[data-path^="03 Permanent/"]   { border-left: 3px solid var(--c-perm); }
+.nav-file-title[data-path^="04 Maps/"]        { border-left: 3px solid var(--c-map); }
+.nav-file-title[data-path^="05 Projects/"]    { border-left: 3px solid var(--c-proj); }
+.nav-file-title[data-path^="06 Daily/"],
+.nav-file-title[data-path^="07 Weekly/"]      { border-left: 3px solid var(--c-daily); }
+.nav-file-title[data-path^="08 Archive/"]     { border-left: 3px solid var(--c-archive); }
+.nav-file-title[data-path^="09 Templates/"],
+.nav-file-title[data-path^="10 Attachments/"] { border-left: 3px solid var(--c-system); }
+.nav-file-title[data-path^="11 AI Chats/"]    { border-left: 3px solid var(--c-ai); }
+
+/* ---------- Tags: note-type tags match their folder; area tags get their own colors ---------- */
+.tag[href="#dashboard"], .tag[href="#profile"], .tag[href="#ai-context"],
+.cm-hashtag.cm-tag-dashboard, .cm-hashtag.cm-tag-profile      { --tag-color: var(--c-home);  --tag-background: rgba(224,165,38,.15); }
+.tag[href="#fleeting"],   .cm-hashtag.cm-tag-fleeting           { --tag-color: var(--c-fleeting); --tag-background: rgba(232,197,71,.15); }
+.tag[href="#literature"], .cm-hashtag.cm-tag-literature         { --tag-color: var(--c-lit);   --tag-background: rgba(74,144,217,.15); }
+.tag[href="#permanent"],  .cm-hashtag.cm-tag-permanent          { --tag-color: var(--c-perm);  --tag-background: rgba(63,166,107,.15); }
+.tag[href="#map"],        .cm-hashtag.cm-tag-map                { --tag-color: var(--c-map);   --tag-background: rgba(142,107,209,.15); }
+.tag[href="#project"],    .cm-hashtag.cm-tag-project            { --tag-color: var(--c-proj);  --tag-background: rgba(224,123,57,.15); }
+.tag[href="#daily"], .tag[href="#weekly"],
+.cm-hashtag.cm-tag-daily, .cm-hashtag.cm-tag-weekly             { --tag-color: var(--c-daily); --tag-background: rgba(43,163,163,.15); }
+.tag[href="#ai-chat"],    .cm-hashtag.cm-tag-ai-chat            { --tag-color: var(--c-ai);    --tag-background: rgba(214,88,155,.15); }
+
+/* Area tags */
+.tag[href="#investing"],  .cm-hashtag.cm-tag-investing  { --tag-color: #2E8B57; --tag-background: rgba(46,139,87,.15); }
+.tag[href="#career"],     .cm-hashtag.cm-tag-career     { --tag-color: #3B6FD8; --tag-background: rgba(59,111,216,.15); }
+.tag[href="#networking"], .cm-hashtag.cm-tag-networking { --tag-color: #3B6FD8; --tag-background: rgba(59,111,216,.15); }
+.tag[href="#course"],     .cm-hashtag.cm-tag-course     { --tag-color: #7B61C9; --tag-background: rgba(123,97,201,.15); }
+.tag[href="#work"],       .cm-hashtag.cm-tag-work       { --tag-color: #C0504D; --tag-background: rgba(192,80,77,.15); }
+
+/* ===== 12 SCHOOL: past courses gray, each active course its own color =====
+   To retire a course, delete its block below (labeled with its code). */
+.nav-folder-title:is([data-path^="12 School/"]), .nav-file-title[data-path^="12 School/"] { color: var(--c-past); opacity: .75; border-left: 3px solid var(--c-past); }
+.nav-folder-title[data-path="12 School"], .nav-folder-title[data-path="12 School/{{TERM}}"], .nav-file-title[data-path="12 School/School Library.md"] { color: var(--c-school); opacity: 1; font-weight: 700; border-left: 3px solid var(--c-school); }
+.nav-folder-title[data-path="12 School/Past Courses"] { font-weight: 700; opacity: .9; }
+.course-past, .course-ref { --course-color: var(--c-past); }
+.course-fall { --course-color: var(--c-school); }
+/* ===== Active courses (one block per course, added by new_course.py; delete a block to retire it) ===== */
+/* COURSES:START */
+/* COURSES:END */
+/* Graph: the Graph Groups plugin (.obsidian/plugins/graph-groups) gives each file dot (PDF, slides,
+   Excel...) the color of its folder's color group. This gray is only the fallback for a file outside
+   every group, or for every file if that plugin is off. Links to notes that don't exist yet (future
+   daily notes) are gray too; the graph hides them. */
+body.theme-dark, body.theme-light { --graph-node-attachment: #8A8F98; --graph-node-unresolved: #8A8F98; }
+.theme-dark .graph-view.color-fill-attachment, .theme-light .graph-view.color-fill-attachment, .graph-view.color-fill-attachment { color: #8A8F98 !important; }
+.theme-dark .graph-view.color-fill-unresolved, .theme-light .graph-view.color-fill-unresolved, .graph-view.color-fill-unresolved { color: #8A8F98 !important; }
+/* Course notes: colored title bar (set by cssclasses in each note) */
+.course-note .inline-title, .course-note h1 { color: var(--course-color, var(--c-school)); border-left: 6px solid var(--course-color, var(--c-school)); padding-left: .45em; }
+.course-note h2 { border-bottom: 2px solid color-mix(in srgb, var(--course-color, var(--c-school)) 40%, transparent); padding-bottom: .15em; }
+.course-past .inline-title, .course-past h1 { opacity: .8; }
+.tag[href="#course/past"] { --tag-color: var(--c-past); --tag-background: rgba(138,143,152,.15); }
+.tag:is([href="#course/materials"],[href="#course/syllabus"],[href="#course/{{TERM_SLUG}}"]) { --tag-color: var(--c-school); --tag-background: rgba(75,156,211,.15); }
+
+/* ---------- 13 Calendar: teal like the other time-based folders ---------- */
+.nav-folder-title[data-path="13 Calendar"] { color: var(--c-daily); font-weight: 600; }
+.nav-file-title[data-path^="13 Calendar/"] { border-left: 3px solid var(--c-daily); }

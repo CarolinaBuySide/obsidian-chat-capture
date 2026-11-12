@@ -1,0 +1,38 @@
+# Git backup for this Obsidian vault (local only, no remote).
+# Purpose: review and roll back changes (especially AI edits) to notes and settings.
+# Track text only. Course files (PDF, Office, media) stay out of git; the
+# _Organizer archives and Time Machine cover those.
+
+# 1) Ignore everything by default...
+*
+# ...but look inside folders
+!*/
+
+# 2) Track these text formats
+!*.md
+!*.base
+!*.canvas
+!*.css
+!*.json
+!*.py
+!13 Calendar/System/**/*.js
+!.gitignore
+
+# 3) Re-ignore noise, caches, per-device state and secrets
+._*
+.DS_Store
+~$*
+.trash/
+.smart-env/
+.obsidian/workspace*.json
+.obsidian/cache/
+.obsidian/backup-before-starter-2026-09-28/
+.obsidian/plugins/*/main.js
+!.obsidian/plugins/graph-groups/main.js
+!.obsidian/plugins/graph-groups/manifest.json
+.obsidian/plugins/*/manifest.json
+.obsidian/plugins/*/styles.css
+# REST API keys and certificates must never be committed
+.obsidian/plugins/obsidian-local-rest-api/
+.obsidian/plugins/smart-connections/
+.claude/settings.local.json

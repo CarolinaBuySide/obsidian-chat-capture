@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/.obsidian/plugins/obsidian-local-rest-api/**)",
+      "Edit(/.obsidian/plugins/obsidian-local-rest-api/**)"
+    ],
+    "ask": [
+      "Edit(/03 Permanent/**)",
+      "Edit(/08 Archive/**)",
+      "Edit(/09 Templates/**)",
+      "Edit(/12 School/**)",
+      "Edit(/.obsidian/**)",
+      "Edit(/.claude/**)",
+      "Edit(/.gitignore)",
+      "Edit(/AGENTS.md)",
+      "Edit(/CLAUDE.md)",
+      "Edit(/00 Home/Agent/USER.md)",
+      "Edit(/00 Home/Goals.md)",
+      "Edit(/00 Home/Principles.md)",
+      "Edit(/00 Home/Writing Style.md)"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "showInlineTitle": false,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "01 Fleeting",
+  "attachmentFolderPath": "10 Attachments",
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "promptDelete": true,
+  "userIgnoreFilters": [
+    "09 Templates/",
+    "/(^|\\/)~\\$/"
+  ],
+  "showUnsupportedFiles": true
+}

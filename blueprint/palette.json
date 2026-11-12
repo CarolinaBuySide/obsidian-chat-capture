@@ -1,0 +1,14 @@
+{
+  "note": "Course colors from the original vault, in the order they were assigned. Gray (#8A8F98) is reserved for past courses and yellow for 01 Fleeting.",
+  "course_palette": [
+    {"name": "Indigo", "hex": "#5A67D8"},
+    {"name": "Magenta", "hex": "#B83DBA"},
+    {"name": "Amber", "hex": "#D4A017"},
+    {"name": "Emerald", "hex": "#10B981"},
+    {"name": "Coral", "hex": "#FF7F50"},
+    {"name": "Crimson", "hex": "#DC2626"},
+    {"name": "Sky", "hex": "#0EA5E9"},
+    {"name": "Lime", "hex": "#84CC16"}
+  ],
+  "area_tag_colors": ["#2E8B57", "#3B6FD8", "#C0504D", "#D4A017", "#7B61C9", "#E07B39"]
+}

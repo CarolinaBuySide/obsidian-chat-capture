@@ -1,0 +1,107 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": false,
+  "showAttachments": true,
+  "hideUnresolved": true,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:\"12 School/Past Courses\" OR tag:#course/past",
+      "color": {
+        "a": 1,
+        "rgb": 9080728
+      }
+    },
+    {
+      "query": "file:\"School Library\" OR path:\"12 School/{{TERM}}\"",
+      "color": {
+        "a": 1,
+        "rgb": 4955347
+      }
+    },
+    {
+      "query": "path:\"12 School\"",
+      "color": {
+        "a": 1,
+        "rgb": 9080728
+      }
+    },
+    {
+      "query": "path:\"00 Home\" OR path:/^[^\\/]+\\.md$/",
+      "color": {
+        "a": 1,
+        "rgb": 14722342
+      }
+    },
+    {
+      "query": "path:\"01 Fleeting\"",
+      "color": {
+        "a": 1,
+        "rgb": 15254855
+      }
+    },
+    {
+      "query": "path:\"02 Literature\"",
+      "color": {
+        "a": 1,
+        "rgb": 4886745
+      }
+    },
+    {
+      "query": "path:\"03 Permanent\"",
+      "color": {
+        "a": 1,
+        "rgb": 4171371
+      }
+    },
+    {
+      "query": "path:\"04 Maps\"",
+      "color": {
+        "a": 1,
+        "rgb": 9333713
+      }
+    },
+    {
+      "query": "path:\"05 Projects\"",
+      "color": {
+        "a": 1,
+        "rgb": 14711609
+      }
+    },
+    {
+      "query": "path:\"06 Daily\" OR path:\"07 Weekly\" OR path:\"13 Calendar\"",
+      "color": {
+        "a": 1,
+        "rgb": 2859939
+      }
+    },
+    {
+      "query": "path:\"08 Archive\"",
+      "color": {
+        "a": 1,
+        "rgb": 9206635
+      }
+    },
+    {
+      "query": "path:\"11 AI Chats\"",
+      "color": {
+        "a": 1,
+        "rgb": 14047387
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1.04502345844504,
+  "lineSizeMultiplier": 0.98371872207328,
+  "collapse-forces": false,
+  "centerStrength": 0.494191242180518,
+  "repelStrength": 14.3294201351832,
+  "linkStrength": 0.880138516532618,
+  "linkDistance": 286,
+  "scale": 0.3,
+  "close": true
+}
