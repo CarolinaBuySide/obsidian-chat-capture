@@ -225,9 +225,9 @@ Readings and other things to do before class ({when}). Graded deadlines stay in 
                      f'.nav-folder-title[data-path="{p_}"] {{ color: var({var}); opacity: 1; font-weight: 700; border-left: 3px solid var({var}); }}\n'
                      f'.nav-folder-title[data-path="{p_}"] .nav-folder-title-content::before {{ content: "● "; }}\n'
                      f':is(.nav-folder-title,.nav-file-title)[data-path^="{p_}/"] {{ color: var(--text-normal); opacity: 1; border-left: 3px solid var({var}); }}\n'
-                     f'.nav-file-title:is([data-path="04 Maps/{code} MOC.md"],[data-path="13 Calendar/Classes/{code} Class.md"],[data-path="13 Calendar/Prep/{code} Prep.md"]) {{ color: var({var}); font-weight: 600; border-left: 3px solid var({var}); }}\n'
+                     f'.nav-file-title[data-path="04 Maps/{code} MOC.md"] {{ color: var({var}); font-weight: 600; border-left: 3px solid var({var}); }}\n'
                      f".course-{s} {{ --course-color: var({var}); }}\n"
-                     f'.tag[href="#course/{s}"] {{ --tag-color: var({var}); --tag-background: color-mix(in srgb, var({var}) 15%, transparent); }}\n\n')
+                     f'.tag[href="#course/{s}"] {{ --tag-color: var({var}); --tag-background: color-mix(in srgb, var({var}) 15%, transparent); }}\n')
             t = t.replace("/* COURSES:END */", block + "/* COURSES:END */")
             css.write_text(t)
     return folder

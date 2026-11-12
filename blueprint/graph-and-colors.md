@@ -11,6 +11,18 @@ A live, circular graph with **Home** pinned in the middle. Around it, each hub f
 3. **Forces** from the original: center 0.494, repel 14.33, link strength 0.88, link distance 286.
 4. **CSS snippet** `color-coding.css`: one `--c-…` variable per folder and per course (between the `COURSE-VARS` markers), a block per course (between the `COURSES` markers), tag colors, and course-note title bars.
 
+## What gets colored
+
+The same places as the original, from the same CSS:
+
+- **File list:** each numbered folder's name in its folder color, with a colored rail on its notes. Each current course's folder gets its own color, a ● dot and a rail down everything inside it; its course map in `04 Maps` is colored to match. Past courses are gray.
+- **Course notes:** any note with `cssclasses: [course-note, course-<code>]` (course maps, Materials notes, lecture notes) gets a title bar and heading underlines in the course color.
+- **Tags:** note-type tags, one color per life area, and each `#course/<code>` tag in its course color.
+- **Graph:** one color group per folder and per course; file dots take their folder's color.
+- **Calendars:** classes, deadlines and prep tasks in the course color, read from the course map's `color` property.
+
+`verify_vault.py` fails if a course is missing any of these pieces, and `obsidian_setup.py check` confirms the colors are applied in the running app.
+
 ## Palette
 
 | Folder | Color |

@@ -75,10 +75,23 @@ body {
 .nav-folder-title[data-path="12 School/Past Courses"] { font-weight: 700; opacity: .9; }
 .course-past, .course-ref { --course-color: var(--c-past); }
 .course-fall { --course-color: var(--c-school); }
-/* ---------- 13 Calendar: teal like the other time-based folders (added 2026-10-12) ---------- */
-.nav-folder-title[data-path="13 Calendar"] { color: var(--c-daily); font-weight: 600; }
-.nav-file-title[data-path^="13 Calendar/"] { border-left: 3px solid var(--c-daily); }
-
 /* ===== Active courses (one block per course, added by new_course.py; delete a block to retire it) ===== */
 /* COURSES:START */
 /* COURSES:END */
+/* Graph: the Graph Groups plugin (.obsidian/plugins/graph-groups) gives each file dot (PDF, slides,
+   Excel...) the color of its folder's color group. This gray is only the fallback for a file outside
+   every group, or for every file if that plugin is off. Links to notes that don't exist yet (future
+   daily notes) are gray too; the graph hides them. */
+body.theme-dark, body.theme-light { --graph-node-attachment: #8A8F98; --graph-node-unresolved: #8A8F98; }
+.theme-dark .graph-view.color-fill-attachment, .theme-light .graph-view.color-fill-attachment, .graph-view.color-fill-attachment { color: #8A8F98 !important; }
+.theme-dark .graph-view.color-fill-unresolved, .theme-light .graph-view.color-fill-unresolved, .graph-view.color-fill-unresolved { color: #8A8F98 !important; }
+/* Course notes: colored title bar (set by cssclasses in each note) */
+.course-note .inline-title, .course-note h1 { color: var(--course-color, var(--c-school)); border-left: 6px solid var(--course-color, var(--c-school)); padding-left: .45em; }
+.course-note h2 { border-bottom: 2px solid color-mix(in srgb, var(--course-color, var(--c-school)) 40%, transparent); padding-bottom: .15em; }
+.course-past .inline-title, .course-past h1 { opacity: .8; }
+.tag[href="#course/past"] { --tag-color: var(--c-past); --tag-background: rgba(138,143,152,.15); }
+.tag:is([href="#course/materials"],[href="#course/syllabus"],[href="#course/{{TERM_SLUG}}"]) { --tag-color: var(--c-school); --tag-background: rgba(75,156,211,.15); }
+
+/* ---------- 13 Calendar: teal like the other time-based folders ---------- */
+.nav-folder-title[data-path="13 Calendar"] { color: var(--c-daily); font-weight: 600; }
+.nav-file-title[data-path^="13 Calendar/"] { border-left: 3px solid var(--c-daily); }

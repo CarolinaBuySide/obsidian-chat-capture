@@ -47,6 +47,7 @@ def main():
         "AREA_TABLE_ROWS": "".join(f"| {ar['name']} | {ar.get('description','')} | [[{ar['name']} MOC]] |\n" for ar in areas),
         "AREA_CHAT_SECTIONS": "".join(f"## {ar['name']}\n\n" for ar in areas),
         "SCHOOL_LINKS_INLINE": "[[School MOC|School]] · [[School Library|Course files]] · " if school else "",
+        "TERM_SLUG": slug(term),
         "CAPTURE_APPS": ", ".join(ans.get("ai_apps", [])) or "none yet",
         "COURSE_COLOR_ROWS": "", "COURSE_TABLE_ROWS": "", "CLASS_TABLE_ROWS": "", "LIBRARY_ROWS": "",
     }
@@ -64,7 +65,10 @@ def main():
             t = t.replace("{{" + k + "}}", val)
         p.write_text(t)
 
-    for i, ar in enumerate(areas):
+    # Area tag colors: drop the original vault's own areas, then add one line per area from the interview.
+    css = dest / ".obsidian/snippets/color-coding.css"
+    css.write_text(re.sub(r'\.tag\[href="#(investing|career|networking|work)"\][^\n]*\n', "", css.read_text()))
+    for i, ar in reversed(list(enumerate(areas))):
         tag = slug(ar["name"])
         (dest / "04 Maps" / f"{ar['name']} MOC.md").write_text(f"""---
 type: map
@@ -101,8 +105,6 @@ SORT file.name DESC
         css = dest / ".obsidian/snippets/color-coding.css"
         c = pal["area_tag_colors"][i % len(pal["area_tag_colors"])]
         css.write_text(css.read_text().replace("/* Area tags */\n", f"/* Area tags */\n.tag[href=\"#{tag}\"], .cm-hashtag.cm-tag-{tag} {{ --tag-color: {c}; --tag-background: color-mix(in srgb, {c} 15%, transparent); }}\n", 1))
-    css = dest / ".obsidian/snippets/color-coding.css"
-    css.write_text(re.sub(r'\.tag\[href="#(investing|career|networking|work)"\][^\n]*\n', "", css.read_text()) if areas else css.read_text())
 
     if school:
         for i, c in enumerate(ans["courses"]):

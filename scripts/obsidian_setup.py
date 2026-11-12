@@ -14,7 +14,7 @@ register  backs up Obsidian's obsidian.json, turns on its command-line interface
 enable    turns Restricted mode off for this vault, enables every plugin listed in
           .obsidian/community-plugins.json and turns on Templater's
           "Trigger Templater on new file creation".
-check     looks inside the running app: plugins loaded, color snippet on, a new note gets
+check     looks inside the running app: plugins loaded, color coding applied, a new note gets
           its template, Home and both calendars render, the graph plugin is live and, if
           installed, the Local REST API answers. Exit code 0 means everything passed.
 
@@ -161,6 +161,21 @@ CHECK_JS = r"""
     const el = leaf.view.containerEl;
     out.views[p] = {rendered: el.querySelectorAll(sel).length, errors: el.querySelectorAll('.dataview-error').length};
   }
+  // Colors: folder names take their folder color, and a course map's title takes its course color.
+  const rgb = hex => { const n = parseInt(hex.replace('#', ''), 16); return `rgb(${n >> 16}, ${(n >> 8) & 255}, ${n & 255})`; };
+  const root = getComputedStyle(document.body);
+  const nav = document.querySelector('.nav-folder-title[data-path="00 Home"]');
+  out.folderColor = !!nav && getComputedStyle(nav).color === rgb(root.getPropertyValue('--c-home').trim());
+  out.course = null;
+  for (const file of app.vault.getMarkdownFiles().filter(x => x.path.startsWith('04 Maps/'))) {
+    const fm = (app.metadataCache.getFileCache(file) || {}).frontmatter || {};
+    if (!/^#[0-9a-f]{6}$/i.test(String(fm.color || '')) || fm.status === 'past') continue;
+    const leaf = app.workspace.getLeaf(false);
+    await leaf.openFile(file, {state: {mode: 'preview'}}); await wait(2500);
+    const t = leaf.view.containerEl.querySelector('.inline-title');
+    out.course = {path: file.path, ok: !!t && getComputedStyle(t).color === rgb(fm.color)};
+    break;
+  }
   const home = app.vault.getAbstractFileByPath('00 Home/Home.md');
   if (home) await app.workspace.getLeaf(false).openFile(home, {state: {mode: 'preview'}});
   return JSON.stringify(out);
@@ -181,6 +196,9 @@ def check(app):
     for path, v in r["views"].items():
         ok = not v.get("missing") and v["rendered"] > 0 and v["errors"] == 0
         results.append((f"renders without errors: {path}", ok))
+    results.append(("folders are color coded in the file list", r["folderColor"]))
+    if r.get("course"):
+        results.append((f"course title shows its course color: {r['course']['path']}", r["course"]["ok"]))
     if "obsidian-local-rest-api" in wanted:
         try:
             req = urllib.request.Request("https://127.0.0.1:27124/")
