@@ -213,6 +213,14 @@ try:
             time.sleep(5)
             if target.is_file():
                 break
+        if not target.is_file():
+            logs = pathlib.Path.home() / "Library/Logs"
+            for name in ("obsidian-clip-capture.log", "obsidian-clip-capture.err"):
+                f = logs / name
+                print(f"--- {name}:", f.read_text(errors="replace")[-1500:] if f.is_file() else "(none)")
+            print("--- pbpaste here:", repr(subprocess.run(["pbpaste"], capture_output=True, text=True).stdout[:60]))
+            print("--- launchctl:", subprocess.run(["launchctl", "print", f"gui/{os.getuid()}/com.obsidian-chat-capture.clipboard"],
+                                                 capture_output=True, text=True).stdout[:1500], flush=True)
         subprocess.run(["launchctl", "bootout", f"gui/{os.getuid()}/com.obsidian-chat-capture.clipboard"], capture_output=True)
         assert target.is_file(), "a copied note block was saved by the clipboard watcher"
         print("ok: a copied note block landed in 11 AI Chats")

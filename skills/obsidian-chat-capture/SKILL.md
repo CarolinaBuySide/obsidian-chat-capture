@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Needs Obsidian desktop with the 'Local REST API with MCP' plugin (v5+) and an MCP client connected to it, or Python 3 for the fallback script. Works in any Agent Skills host."
 metadata:
   author: Marc Rainone
-  version: "1.5.0"
+  version: "1.5.1"
 ---
 
 # Obsidian Chat Capture
