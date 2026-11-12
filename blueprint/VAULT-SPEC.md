@@ -64,7 +64,36 @@ Every note has `type`, `tags` and `created`. Hubs, projects, literature and perm
 
 ## Plugins and settings
 
-- **Community plugins:** Dataview (JS on), Templater (folder templates for 01–07), Calendar (Monday start, weekly notes in `07 Weekly`), Obsidian Git (30-minute local commits, push off) and **Graph Groups**, a custom plugin bundled in the template. Graph Groups colors file dots by folder, pins Home in the center and lays each hub and course out as its own starburst.
-- **Optional:** Local REST API, for AI apps without file access.
+- **Community plugins:** Dataview (JS on), Templater (folder templates for 01–07), Calendar (Monday start, weekly notes in `07 Weekly`), Obsidian Git (30-minute local commits, push off), Local REST API (how AI apps read and write the vault) and **Graph Groups**, a custom plugin bundled in the template. Graph Groups colors file dots by folder, pins Home in the center and lays each hub and course out as its own starburst.
+- **Optional:** Smart Connections (on in the original; off by default here because it downloads a model).
 - **Settings:** new notes go to `01 Fleeting`, attachments to `10 Attachments`, links update automatically, and `09 Templates` and Office `~$` lock files are excluded.
 - **CSS snippet `color-coding`:** folder colors, a colored rail on each note, tag colors, and course title bars set by `cssclasses: [course-note, course-<code>]`.
+
+## Chat capture
+
+How AI chats end up in `11 AI Chats`, as in the original:
+
+- The **Local REST API** plugin serves the vault to apps on the same computer at `https://127.0.0.1:27124` (an MCP server at `/mcp/`). Its key and certificate stay in the plugin folder, which `.gitignore` and `.claude/settings.json` both block.
+- The **`obsidian-chat-capture` skill** is installed in each AI app. It writes one `YYYY-MM-DD - Topic.md` note per chat (question, takeaways, decisions, next steps, links), links only to notes that exist, appends instead of overwriting, redacts secrets, and adds dated events to the calendar.
+- One line in each app's **custom instructions** makes it automatic.
+- **Cloud apps** can't reach the computer, so the skill ends with a copy-ready block that starts `obsidian-capture: <path>`. On macOS a small login item (`clip_capture.py`) watches the clipboard and saves those blocks.
+- `scripts/setup_chat_capture.py` sets all of this up and tests it.
+
+## How close this is to the original
+
+The template was last compared file by file with the live vault on **2026-11-11**.
+
+**The same:** the fourteen numbered folders; every dashboard in `00 Home`; the vault `AGENTS.md`, `CLAUDE.md` and `.claude/settings.json`; the seven skill notes and their slash-command pointers; `vault_health.py`; every template in `09 Templates`; both calendar views and `add_event.py`; the Graph Groups plugin and its layout; graph forces and color groups; the `color-coding` CSS snippet; Dataview, Templater, Calendar and Git plugin settings; app, appearance, core-plugin, daily-note, template, bookmark and property-type settings; `.gitignore`. Differences in those files are only names, example course codes and dates.
+
+**Yours instead of the original's:** your name, areas, courses, term and colors, taken from the interview. `About me`, `Goals`, `Principles`, `Writing Style`, `USER`, `Top of Mind` and `Agent Memory` start as short drafts.
+
+**Left out on purpose:**
+
+| Left out | Why |
+|---|---|
+| Notes, course files, chats and events | Personal |
+| Canvas Sync (skill note, sync script, the "Sync from Canvas" bar) | Tied to one school's Canvas and a Perplexity automation. The bar hides itself when sync isn't set up |
+| `.chat-sync/` ledger | Bookkeeping for a nightly Perplexity scheduled task that swept the day's chats into the vault. It only works in Perplexity; here each chat saves itself through the skill |
+| `12 School/_Admin & Calendars`, `_Course not identified`, `_Duplicates to review` | Leftovers from importing years of old files; a new vault has nothing to sort |
+| Smart Connections | Optional (`--smart-connections`) |
+| Workspace layout (open tabs, sidebar state) | Per-device; Obsidian creates it on first open |

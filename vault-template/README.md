@@ -42,7 +42,7 @@ Full color list: [[Color Key]].
 6. Office makes hidden `~$` lock files while a document is open. They're excluded from search and the graph (Settings → Files and links → Excluded files), so they never show up as loose nodes.
 
 ## Plugins
-Dataview (tables and calendars), Templater (templates), Calendar (daily notes), Obsidian Git (local undo history) and Graph Groups (colored starburst graph centered on Home). Optional: Local REST API, so AI apps can read and write the vault. Setup steps: [[Plugin Setup Checklist]].
+Dataview (tables and calendars), Templater (templates), Calendar (daily notes), Obsidian Git (local undo history) and Graph Groups (colored starburst graph centered on Home). Local REST API lets AI apps read and write the vault, which is how chats get saved into `11 AI Chats`. Setup steps: [[Plugin Setup Checklist]].
 
 ## AI agents
 - Agents start at [[AGENTS]], the operating manual: read order, permissions, conventions and skills. Claude Code reads it through [[CLAUDE]].

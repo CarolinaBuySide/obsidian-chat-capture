@@ -6,8 +6,10 @@ Usage:
 
 answers.json shape: blueprint/answers.example.json.
 Refuses to write into a folder that already has files. Standard library only.
+Ends by making the vault a local git repository (no remote), as the Obsidian Git plugin
+expects; pass --no-git to skip that.
 """
-import argparse, datetime, json, pathlib, re, shutil, sys
+import argparse, datetime, json, pathlib, re, shutil, subprocess, sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from new_course import add_course, slug
 
@@ -17,6 +19,7 @@ TEXT = {".md", ".json", ".css", ".js", ".py", ".base"}
 
 def main():
     a = argparse.ArgumentParser(); a.add_argument("--answers", required=True); a.add_argument("--dest", required=True)
+    a.add_argument("--no-git", action="store_true", help="do not turn the vault into a local git repository")
     x = a.parse_args()
     ans = json.loads(pathlib.Path(x.answers).expanduser().read_text())
     dest = pathlib.Path(x.dest).expanduser().resolve()
@@ -43,6 +46,8 @@ def main():
         "AREA_LINKS_INLINE": "".join(f"[[{ar['name']} MOC|{ar['name']}]] · " for ar in areas),
         "AREA_TABLE_ROWS": "".join(f"| {ar['name']} | {ar.get('description','')} | [[{ar['name']} MOC]] |\n" for ar in areas),
         "AREA_CHAT_SECTIONS": "".join(f"## {ar['name']}\n\n" for ar in areas),
+        "SCHOOL_LINKS_INLINE": "[[School MOC|School]] · [[School Library|Course files]] · " if school else "",
+        "CAPTURE_APPS": ", ".join(ans.get("ai_apps", [])) or "none yet",
         "COURSE_COLOR_ROWS": "", "COURSE_TABLE_ROWS": "", "CLASS_TABLE_ROWS": "", "LIBRARY_ROWS": "",
     }
     for p in dest.rglob("*"):
@@ -109,6 +114,25 @@ SORT file.name DESC
         shutil.rmtree(dest / "12 School", ignore_errors=True)
         for rel in ["04 Maps/School MOC.md", "09 Templates/Course.md"]:
             (dest / rel).unlink(missing_ok=True)
+    # Plugins: Local REST API is what lets AI apps save chats; Smart Connections is opt-in.
+    cp = dest / ".obsidian/community-plugins.json"
+    ids = json.loads(cp.read_text())
+    if ans.get("chat_capture", True) is False:
+        ids = [i for i in ids if i != "obsidian-local-rest-api"]
+    if ans.get("smart_connections") and "smart-connections" not in ids:
+        ids.insert(ids.index("obsidian-git"), "smart-connections")
+    cp.write_text(json.dumps(ids, indent=2) + "\n")
+
+    if not x.no_git and ans.get("local_history", True) and shutil.which("git"):
+        def git(*args):
+            return subprocess.run(["git", "-C", str(dest), *args], capture_output=True, text=True)
+        git("init", "-q")
+        ident = [] if git("config", "user.email").stdout.strip() else ["-c", f"user.name={subs['USER_NAME']}", "-c", "user.email=vault@localhost"]
+        git("add", "-A")
+        r = git(*ident, "commit", "-q", "-m", "Vault built from the blueprint")
+        print("Local git history started (no remote)." if r.returncode == 0 else f"git commit skipped: {r.stderr.strip()[:200]}")
+    elif ans.get("local_history", True) is False:
+        cp.write_text(json.dumps([i for i in json.loads(cp.read_text()) if i != "obsidian-git"], indent=2) + "\n")
     print(f"Built vault at {dest}")
 
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ Create `04 Maps/<Area> MOC.md` from the Map of Content template, then link it fr
 Edit the variable in `color-coding.css`, the matching graph color group, and the Color Key row. Keep all three in sync.
 
 ## Connect AI apps
-- **Claude Code:** run `claude` inside the vault. It reads `CLAUDE.md` → `AGENTS.md` and gets `/todays-focus`, `/weekly-review` and the other skills from `.claude/skills/`.
-- **Apps with file access** (Codex, Cursor, Perplexity on your computer): point them at `AGENTS.md`.
-- **MCP apps without file access:** install the Local REST API plugin and follow `skills/obsidian-chat-capture/references/setup.md`.
-- **Optional:** install [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) into `.claude/skills/` for Obsidian syntax help.
+- **Chat capture for Claude Code, Claude Desktop, Cursor or Codex:** `python3 scripts/setup_chat_capture.py connect "<vault>" --app <app>`, with Obsidian open. Other apps: `skills/obsidian-chat-capture/references/setup.md`.
+- **Claude Code inside the vault:** run `claude` in the vault folder. It reads `CLAUDE.md` → `AGENTS.md` and gets `/todays-focus`, `/weekly-review` and the other skills from `.claude/skills/`.
+- **Other apps with file access** (Codex, Cursor, Perplexity on your computer): point them at the vault's `AGENTS.md`.
+- **Cloud apps (ChatGPT, phones):** upload the `obsidian-chat-capture` skill, and on a Mac run `python3 scripts/setup_chat_capture.py watcher "<vault>"` so copied note blocks save themselves.

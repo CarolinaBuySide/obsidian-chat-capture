@@ -1,24 +1,26 @@
 ---
 name: obsidian-vault-builder
-description: "Build a new Obsidian vault from the Obsidian AI Vault blueprint (taken from a real student vault): numbered folders, a Home-centered starburst graph, weekly and to-do calendars, color-coded courses, and an AGENTS.md operating layer. Use for 'build me an Obsidian vault', 'set up Obsidian like this', 'add a course to my vault'. Not for saving chats (use obsidian-chat-capture)."
+description: "Build a new Obsidian vault from the Obsidian AI Vault blueprint (taken from a real student vault): numbered folders, a Home-centered starburst graph, weekly and to-do calendars, color-coded courses, an AGENTS.md operating layer, and AI chats that save into the vault. Use for 'build me an Obsidian vault', 'set up Obsidian like this', 'add a course to my vault'. Not for saving one chat (use obsidian-chat-capture)."
 license: MIT
-compatibility: "Needs Python 3 and a copy of the obsidian-ai-vault repo (scripts/, vault-template/, blueprint/). Works in any Agent Skills host that can run code."
+compatibility: "Needs Python 3.9+ and a copy of the blueprint repo (scripts/, vault-template/, blueprint/). Steps 4 and 5 need Obsidian 1.12+ on the user's computer."
 metadata:
   author: Marc Rainone
-  version: "2.0.0"
+  version: "3.0.0"
 ---
 
 # Obsidian Vault Builder
 
-The full procedure is in the repo's root `AGENTS.md`. In short:
+The full procedure is the repo's root `AGENTS.md`; read it and follow it. In short:
 
-1. **Get the repo.** If `scripts/build_vault.py` isn't next to this skill's parent folders, clone the repo this skill came from.
+1. **Get the repo.** If `scripts/build_vault.py` isn't two folders above this file, clone the repo this skill came from.
 2. **Interview** with `blueprint/interview.md`. Write `answers.json` like `blueprint/answers.example.json` and confirm a summary with the user.
 3. **Build:** `python3 scripts/build_vault.py --answers answers.json --dest "<new folder>"`. It refuses non-empty folders.
-4. **Plugins:** `bash scripts/install-plugins.sh "<dest>"` (or the `.ps1` on Windows). Then the user trusts plugins in Obsidian and turns on Templater's "Trigger on new file creation".
-5. **Verify:** `python3 scripts/verify_vault.py "<dest>"` must print `PASS`.
-6. **Report** the path, what to open first (Home) and any manual steps left.
+4. **Plugins:** `python3 scripts/install_plugins.py "<vault>" --obsidian-skills`.
+5. **Turn on:** `python3 scripts/obsidian_setup.py register "<vault>"` with Obsidian quit, open Obsidian, then `enable` and `check`. `check` must print `PASS`.
+6. **Chat capture:** `python3 scripts/setup_chat_capture.py test "<vault>"`, then `connect --app <app>` for each app, `watcher` on macOS, and give the user the line from `instructions`.
+7. **Verify:** `python3 scripts/verify_vault.py "<vault>"` must print `PASS`.
+8. **Report** the path, what passed, what you could not run, and what to open first (Home).
 
-Add a course to an existing blueprint vault with `scripts/new_course.py` (close Obsidian first). Retire one with the steps in `blueprint/personalize.md`.
+Add a course to a blueprint vault with `scripts/new_course.py` (close Obsidian first). Retire one with the steps in `blueprint/personalize.md`.
 
-Never write into an existing vault unless the user asks. If they do, back up first, add only missing files, and merge settings without overwriting their values.
+Never write into an existing vault unless the user asks. If they do, back up first, add only missing files, and merge settings without overwriting their values. Never print or ask for the Local REST API key.

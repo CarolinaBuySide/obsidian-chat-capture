@@ -59,9 +59,9 @@ env = { NODE_TLS_REJECT_UNAUTHORIZED = "0" }
 
 ## 3. Turn on automatic capture (apps with vault access)
 
-Add this line to the app's custom instructions (Claude: Profile → Preferences; ChatGPT: Personalization; Perplexity: Profile → Introduce yourself):
+Claude apps auto-save substantive chats by default; adding the line below to Claude's Profile → Preferences makes it more reliable. Other apps need it in their custom instructions (ChatGPT: Personalization; Perplexity: Profile → Introduce yourself):
 
-> At the end of any substantive chat (decisions, plans, research or tasks), use the obsidian-chat-capture skill to save a short note to my Obsidian vault and tell me the path.
+> After any substantive answer (a decision, plan, checklist, analysis, research or tasks), use the obsidian-chat-capture skill to save a short note to my Obsidian vault and tell me the path. Don't wait for the chat to end.
 
 ## 4. Automatic capture from cloud apps (macOS)
 

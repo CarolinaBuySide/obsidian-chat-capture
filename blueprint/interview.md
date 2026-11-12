@@ -21,6 +21,10 @@ Ask a few questions at a time, in plain language. Skip what the user already tol
 ## Destination
 10. Where should the vault go? Default `~/Documents/<Name>'s Vault`. Must be a new or empty folder.
 
+## AI chats
+11. Should AI chats save into the vault? Default yes. → `chat_capture`
+12. Which AI apps do you use? (Claude Code, Claude Desktop, Cursor, Codex, Perplexity, ChatGPT, others) → `ai_apps[]`. You connect each one in step 5 of `AGENTS.md`.
+
 ## Optional
-11. Do you want AI chats saved into the vault automatically? If yes, set up `skills/obsidian-chat-capture` after the build.
-12. Do you want local version history (Obsidian Git, commits every 30 minutes, nothing uploaded)? Default yes.
+13. Local version history (the Git plugin commits text notes every 30 minutes; nothing is uploaded)? Default yes. → `local_history`
+14. Smart Connections (finds related notes with an AI model that runs on your computer)? The original vault has it; default no because it downloads a model. → `smart_connections`

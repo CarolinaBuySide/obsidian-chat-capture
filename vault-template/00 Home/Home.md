@@ -16,8 +16,7 @@ tags:
 
 **Capture:** create a new note (`Ctrl/Cmd + N`) — it lands in `01 Fleeting` and Templater asks for a title.
 
-**Areas:** [[School MOC|School]] · [[School Library|Course files]] <!-- if:school -->
-{{AREA_LINKS_INLINE}}[[AI Chats MOC|AI chats]] · [[Calendar MOC|Calendar]]
+**Areas:** {{SCHOOL_LINKS_INLINE}}{{AREA_LINKS_INLINE}}[[AI Chats MOC|AI chats]] · [[Calendar MOC|Calendar]]
 
 **AI Context:** [[AI Context]] (read first; the shared brain for every AI app) · [[About me]]
 

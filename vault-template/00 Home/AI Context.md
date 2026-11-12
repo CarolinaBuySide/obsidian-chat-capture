@@ -25,6 +25,11 @@ tags:
 - **Pilot before automating.** Show a concrete test before installing agents, scheduling runs or sending anything.
 - **Privacy:** never store or repeat keys, passwords, account numbers or other people's private details.
 
+## How AI chats get saved
+- Apps that can reach the vault (Claude Code, Claude Desktop, Cursor, Codex, Perplexity on this computer) use the `obsidian-chat-capture` skill: one short note per chat in `11 AI Chats`, linked to existing notes and listed in [[AI Chats MOC]].
+- Cloud apps (ChatGPT, phone apps) end with a copy-ready note block. On a Mac the clipboard watcher saves it into `11 AI Chats`; otherwise paste it into a new note.
+- Apps set up so far: {{CAPTURE_APPS}}
+
 ## Where things live
 - **Areas:** {{AREA_LINKS_INLINE}}[[Color Key]]
 - **Calendar:** [[Weekly Calendar]] (classes, calls, meetings, exams) · [[To-Do Calendar]] (everything due, by month)

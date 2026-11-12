@@ -12,7 +12,7 @@ REQUIRED = ["00 Home", "01 Fleeting/AI Drafts", "02 Literature", "03 Permanent",
             "13 Calendar/Prep", "13 Calendar/System/calendar-view", "13 Calendar/System/task-calendar"]
 CORE = ["AGENTS.md", "00 Home/Home.md", "00 Home/AI Context.md", "00 Home/Top of Mind.md", "00 Home/Weekly Calendar.md",
         "00 Home/To-Do Calendar.md", "13 Calendar/To-Do.md", "13 Calendar/System/add_event.py",
-        ".obsidian/plugins/graph-groups/main.js", "04 Maps/AI Chats MOC.md", "04 Maps/Calendar MOC.md", "04 Maps/AI Agent MOC.md"]
+        ".obsidian/plugins/graph-groups/main.js", ".obsidian/templates.json", ".obsidian/snippets/color-coding.css", "04 Maps/AI Chats MOC.md", "04 Maps/Calendar MOC.md", "04 Maps/AI Agent MOC.md"]
 LINK = re.compile(r"(?<!!)\[\[([^\]|#^]+)(?:[#^][^\]|]*)?(?:\|[^\]]*)?\]\]|!\[\[([^\]|#^]+)")
 SECRET = re.compile(r"(sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{30,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|xox[bap]-[A-Za-z0-9-]{10,})")
 SKIP_ORPHAN = {"Home", "AGENTS", "CLAUDE", "README"}
@@ -29,7 +29,7 @@ def main():
         try: json.loads(j.read_text())
         except Exception as e: issues["json"].append(f"{j.relative_to(vault)}: {e}")
 
-    files = [p for p in vault.rglob("*") if p.is_file() and not ({".obsidian", ".git", ".claude", "System"} & set(p.parts))]
+    files = [p for p in vault.rglob("*") if p.is_file() and not ({".obsidian", ".git", ".claude", ".trash", "System"} & set(p.parts))]
     md = [p for p in files if p.suffix == ".md"]
     names = {}
     for p in files:

@@ -42,7 +42,7 @@ This is {{USER_NAME}}'s Obsidian vault (`{{VAULT_PATH}}`). Every agent (Claude C
 When unsure, write a proposal to `01 Fleeting/AI Drafts/` and link it instead of editing in place.
 
 ## 4. Marking AI work
-- Add the tag `ai-assisted` to every note an agent creates, or whose content or `summary` an agent writes or changes. {{USER_NAME}} removes the tag once they has reviewed the note. The review queue lives in [[AI Agent MOC]].
+- Add the tag `ai-assisted` to every note an agent creates, or whose content or `summary` an agent writes or changes. {{USER_NAME}} removes the tag once they have reviewed the note. The review queue lives in [[AI Agent MOC]].
 - Generated text added inside one of {{USER_NAME}}'s notes goes in a callout: `> [!ai] Added by <agent>, YYYY-MM-DD`.
 - Frontmatter stays YAML at the top. Never delete a property or change a list's format.
 
@@ -75,7 +75,7 @@ Each skill does one job. The canonical instructions are notes in `00 Home/Agent/
 | `/vault-health` | Find broken links, orphans, missing summaries, stale items and contradictions | [[Skill - Vault Health]] |
 | `/write-like-me` | Draft text in {{USER_NAME}}'s voice from [[Writing Style]] and their own notes | [[Skill - Write Like Me]] |
 | `/calendar-update` | Add, move or cancel calls, meetings, exams and other dated events in [[Weekly Calendar]] | [[Skill - Calendar Update]] |
-| `obsidian-chat-capture` | Save a chat's takeaways to `11 AI Chats` (optional) | `skills/obsidian-chat-capture` in the blueprint repo |
+| `obsidian-chat-capture` | Save a chat's takeaways to `11 AI Chats` (a skill installed in each AI app, not in the vault) | `skills/obsidian-chat-capture` in the blueprint repo |
 
 ## 9. Feedback loop
 - After running a skill, append one dated line to that skill note's `## Retro log`: what worked, what didn't, and a proposed fix. Apply the fix only after {{USER_NAME}} agrees.
