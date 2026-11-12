@@ -75,6 +75,7 @@ Each skill does one job. The canonical instructions are notes in `00 Home/Agent/
 | `/vault-health` | Find broken links, orphans, missing summaries, stale items and contradictions | [[Skill - Vault Health]] |
 | `/write-like-me` | Draft text in {{USER_NAME}}'s voice from [[Writing Style]] and their own notes | [[Skill - Write Like Me]] |
 | `/calendar-update` | Add, move or cancel calls, meetings, exams and other dated events in [[Weekly Calendar]] | [[Skill - Calendar Update]] |
+| `/canvas-sync` | Pull new Canvas deadlines, date changes, files, readings and class changes into the course maps, folders, prep notes and calendars | [[Skill - Canvas Sync]] | <!-- if:school -->
 | `obsidian-chat-capture` | Save a chat's takeaways to `11 AI Chats` (a skill installed in each AI app, not in the vault) | `skills/obsidian-chat-capture` in the blueprint repo |
 
 ## 9. Feedback loop
@@ -86,4 +87,5 @@ Each skill does one job. The canonical instructions are notes in `00 Home/Agent/
 - When a chat reveals a dated call, meeting, interview, appointment, exam, trip or class change, add it to the calendar in the same turn with [[Skill - Calendar Update]] (`13 Calendar/System/add_event.py`), then tell {{USER_NAME}} in one line what you added. Don't wait to be asked.
 - Deadlines stay tasks written `- [ ] task [due:: YYYY-MM-DD]`; [[Weekly Calendar]] and [[To-Do Calendar]] show them automatically.
 - When a chat reveals anything {{USER_NAME}} has to do by a date (an assignment, a pre-class reading, a form, an errand), write the task in the same turn and tell them in one line: course deadlines in the course map, readings and class prep in `13 Calendar/Prep/<course> Prep.md`, anything else in the chat's note or, with no chat note, [[To-Do]]. Details: the to-dos section of [[Skill - Calendar Update]].
+- Canvas refreshes follow [[Skill - Canvas Sync]], which any agent with a terminal on this computer can run. During a run, an agent may also add, re-date or check off tasks in a course map's `## Upcoming deadlines`, add new course files to the course folders in `12 School`, and save `13 Calendar/System/canvas-sync/state.json`. New readings and class prep go in the course's prep note; optional readings get `[scheduled:: …]` instead of `due`. <!-- if:school -->
 - Asked about their schedule, read the calendar first (`add_event.py list --from DATE --to DATE`).

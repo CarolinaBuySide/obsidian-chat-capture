@@ -18,8 +18,9 @@ The full procedure is the repo's root `AGENTS.md`; read it and follow it. In sho
 4. **Plugins:** `python3 scripts/install_plugins.py "<vault>" --obsidian-skills`.
 5. **Turn on:** `python3 scripts/obsidian_setup.py register "<vault>"` with Obsidian quit, open Obsidian, then `enable` and `check`. `check` must print `PASS`.
 6. **Chat capture:** `python3 scripts/setup_chat_capture.py test "<vault>"`, then `connect --app <app>` for each app, `watcher` on macOS, and give the user the line from `instructions`.
-7. **Verify:** `python3 scripts/verify_vault.py "<vault>"` must print `PASS`.
-8. **Report** the path, what passed, what you could not run, and what to open first (Home).
+7. **Canvas (students):** the user runs `canvas_api.py login --host <school>.instructure.com` in their own terminal; then `sync.py setup` and a first sync per the vault's `Skill - Canvas Sync` note. Never ask for the token in chat.
+8. **Verify:** `python3 scripts/verify_vault.py "<vault>"` must print `PASS`.
+9. **Report** the path, what passed, what you could not run, and what to open first (Home).
 
 Add a course to a blueprint vault with `scripts/new_course.py` (close Obsidian first). Retire one with the steps in `blueprint/personalize.md`.
 

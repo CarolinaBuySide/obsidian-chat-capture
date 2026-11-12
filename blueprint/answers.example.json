@@ -16,6 +16,7 @@
     {"code": "FIN 410", "name": "Derivatives", "days": ["Tue", "Thu"], "start": "09:30", "end": "10:45",
      "location": "Room 2550", "term_start": "2026-10-12", "term_end": "2026-12-02"}
   ],
+  "canvas_hosts": ["school.instructure.com"],
   "chat_capture": true,
   "ai_apps": ["Claude Code", "ChatGPT"],
   "local_history": true,

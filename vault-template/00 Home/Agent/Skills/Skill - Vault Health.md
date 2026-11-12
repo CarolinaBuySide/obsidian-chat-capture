@@ -23,7 +23,7 @@ Monthly, before a big reorganization, after a batch edit, or when the user types
    It reports broken links, unresolved daily links, isolated notes, notes with no backlinks, notes not connected to a map, missing frontmatter and summaries, long notes without summaries, stale inbox items, duplicate lines in maps, the `ai-assisted` review queue, leftover example notes, possible secrets (line numbers only) and unlinked course files. Add `--json` for machine-readable output.
 2. **Judgment checks** the script can't do:
    - Contradictions: a project marked active whose `due` date has passed; course MOCs still active after the course ended; [[AI Context]] or [[Top of Mind]] disagreeing with project notes.
-   - Staleness: `updated` dates older than 14 days on hubs.
+   - Staleness: Canvas syncs older than 7 days (when Canvas is connected); `updated` dates older than 14 days on hubs.
    - Duplicates: two notes on the same source or idea.
 3. **Write the report** to `01 Fleeting/AI Drafts/YYYY-MM-DD Vault Health Report.md`: the counts table, then fixes in three groups:
    - **Safe fixes** (agents may apply): add a missing `summary`, add a missing map link by appending a pointer line, remove an exact duplicate line in a map.

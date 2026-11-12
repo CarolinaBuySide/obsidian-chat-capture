@@ -18,6 +18,8 @@ Ask a few questions at a time, in plain language. Skip what the user already tol
 9. Any course color preferences? Otherwise colors come from `palette.json` in order (Indigo, Magenta, Amber, Emerald, Coral…). → `courses[].color` and `color_name`
 9b. School breaks, last day of classes and exam dates? Add them after the build with `add_event.py --kind break --no-class`.
 
+9c. Does your school use Canvas? If yes, what address do you log in at (for example `school.instructure.com`)? More than one site is fine. → `canvas_hosts[]`. You connect it in step 6 of `AGENTS.md`; the user creates the access token themselves.
+
 ## Destination
 10. Where should the vault go? Default `~/Documents/<Name>'s Vault`. Must be a new or empty folder.
 

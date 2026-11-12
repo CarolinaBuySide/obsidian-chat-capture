@@ -1,0 +1,9 @@
+{
+ "timezone": "{{TIMEZONE}}",
+ "ignore": ["^attendance\\b", "^in-class activity", "^class \\d+$"],
+ "skip_files": ["seating chart", "roster", "banner", "^screenshot", "^untitled\\b"],
+ "skip_extensions": ["png", "jpg", "jpeg", "gif", "svg", "webp", "heic", "bmp", "tif", "tiff", "mp4", "mov", "m4v", "mp3", "m4a", "wav", "zip"],
+ "courses": [],
+ "watch_only": [],
+ "notes": "Filled in by `sync.py setup`. slides_are_prep: set it to true for a course whose instructor posts lecture notes before class, so each new deck becomes a 'read before class' task. Other courses' decks are imported and listed without a task."
+}

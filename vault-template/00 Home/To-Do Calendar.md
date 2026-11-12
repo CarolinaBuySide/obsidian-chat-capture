@@ -30,6 +30,7 @@ await dv.view("13 Calendar/System/task-calendar", {mode: "month"})
 >
 > **How things get added**
 > - Mention a deadline, reading or to-do with a date in any AI chat and it lands here as a task, following [[Skill - Calendar Update]].
+> - **Canvas:** ask any AI that can run commands on this computer to sync from Canvas, or click **Copy sync request** above the grid and paste it into your AI. It pulls new assignments, date changes, files, readings and class changes into the course maps and prep notes, following [[Skill - Canvas Sync]]. The line above the grid shows when Canvas was last synced. <!-- if:school -->
 >
 > **Optional fields** in a task line: `[scheduled:: YYYY-MM-DD]` for a suggested date instead of a deadline · `[kind:: assignment]`, `prep`, `exam` or `todo` · `[course:: ECON 101]` · `[time:: 15:30]`.
 

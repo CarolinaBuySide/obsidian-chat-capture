@@ -9,8 +9,8 @@ The person you are helping may never have used Obsidian. Explain in plain words,
 | You have | Do this |
 |---|---|
 | A shell on the user's computer (Claude Code, Codex, Cursor, a desktop agent) | Clone this repo there and run every step. |
-| File access to their computer but no shell there | Run steps 1 to 3 in your own sandbox, copy every file (including hidden `.obsidian/**`, `.claude/**` and `.gitignore`) to the destination, then give the user the commands for steps 4 to 6. |
-| Neither (a cloud chat app) | Run steps 1 to 3 in your sandbox if you have one and hand back a zip. Then give the user the commands for steps 4 to 6. With no sandbox, give them all the commands. |
+| File access to their computer but no shell there | Run steps 1 to 3 in your own sandbox, copy every file (including hidden `.obsidian/**`, `.claude/**` and `.gitignore`) to the destination, then give the user the commands for steps 4 to 7. |
+| Neither (a cloud chat app) | Run steps 1 to 3 in your sandbox if you have one and hand back a zip. Then give the user the commands for steps 4 to 7. With no sandbox, give them all the commands. |
 
 Requirements on the user's computer: [Obsidian](https://obsidian.md/download) 1.12 or newer, Python 3.9 or newer, and `git` (optional, for local history). If Obsidian is missing, ask the user to install it; do not install apps for them without asking.
 
@@ -65,7 +65,26 @@ python3 scripts/setup_chat_capture.py instructions
 - Give the user the line from `instructions` to paste into each app's custom instructions. That line is what makes capture automatic.
 - Prove it: in one connected app, ask it to save a short test chat, and check that a `YYYY-MM-DD - Topic.md` note appeared in `11 AI Chats`. If you can't run that app, tell the user how to try it.
 
-## 6. Verify the files
+## 6. Connect Canvas (students whose school uses Canvas)
+
+This keeps course deadlines, files and readings current. It works from a terminal, so any AI can run it later. Skip it if the user isn't a student or their school doesn't use Canvas.
+
+1. Ask the user to create a Canvas access token (Canvas → Account → Settings → **+ New access token**) and to run this **themselves, in their own terminal**, pasting the token at the hidden prompt:
+   ```bash
+   python3 "<vault>/13 Calendar/System/canvas-sync/canvas_api.py" login --host <school>.instructure.com
+   ```
+   Never ask for the token in chat, never read `~/.config/obsidian-canvas-sync/config.json`, and never print it. A user with two Canvas sites runs it once per site.
+2. Then you run:
+   ```bash
+   python3 "<vault>/13 Calendar/System/canvas-sync/sync.py" setup    # done when every course shows OK
+   ```
+   If a course shows `??`, rerun with `--map "<CODE>=<canvas id>"` using the ids it lists.
+3. Ask which courses post lecture notes before class, and set `slides_are_prep` to `true` for those in `courses.json`.
+4. Run the first sync by following the vault's `00 Home/Agent/Skills/Skill - Canvas Sync.md` (plan, fill in lecture notes, apply, finish). Done when `sync.py status` shows a last sync time.
+
+If the school has turned off access tokens, use the "Browser reader" section of that skill note, which needs an AI that can drive a browser the user is logged into. If neither is possible, say so in your report; the rest of the vault works without it.
+
+## 7. Verify the files
 
 ```bash
 python3 scripts/verify_vault.py "<vault>"     # done when it prints PASS
@@ -74,7 +93,7 @@ python3 "<vault>/13 Calendar/System/add_event.py" list --from <today> --to <toda
 
 `verify_vault.py` checks folders, settings, links, orphan notes, leftover placeholders and secrets. The second command should list the "Vault created" event and, for students, this week's classes.
 
-## 7. Report
+## 8. Report
 
 Tell the user, in a few lines:
 
@@ -82,6 +101,7 @@ Tell the user, in a few lines:
 - which steps passed, and exactly which ones you could not run;
 - that `About me`, `Goals`, `Principles` and `Writing Style` in `00 Home` are starter drafts for them to rewrite;
 - which AI apps are connected and how a chat gets saved from each;
+- for students, whether Canvas is connected, and that they can say "sync from Canvas" to any AI with a terminal on this computer;
 - that Obsidian's command-line setting is now on, and where the settings backup is (printed by `register`);
 - for students, to give you their breaks and exam dates so you can add them ([`blueprint/personalize.md`](blueprint/personalize.md)).
 

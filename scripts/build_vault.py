@@ -112,7 +112,9 @@ SORT file.name DESC
                        c.get("color") or p["hex"], c.get("color_name") or ("" if c.get("color") else p["name"]))
     else:
         shutil.rmtree(dest / "12 School", ignore_errors=True)
-        for rel in ["04 Maps/School MOC.md", "09 Templates/Course.md"]:
+        shutil.rmtree(dest / "13 Calendar/System/canvas-sync", ignore_errors=True)
+        shutil.rmtree(dest / ".claude/skills/canvas-sync", ignore_errors=True)
+        for rel in ["04 Maps/School MOC.md", "09 Templates/Course.md", "00 Home/Agent/Skills/Skill - Canvas Sync.md"]:
             (dest / rel).unlink(missing_ok=True)
     # Plugins: Local REST API is what lets AI apps save chats; Smart Connections is opt-in.
     cp = dest / ".obsidian/community-plugins.json"

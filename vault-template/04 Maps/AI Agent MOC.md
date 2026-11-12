@@ -27,6 +27,7 @@ How AI tools work in this vault, in one place. Agents start at [[AGENTS]]; Claud
 | `/vault-health` | [[Skill - Vault Health]] |
 | `/write-like-me` | [[Skill - Write Like Me]] |
 | `/calendar-update` | [[Skill - Calendar Update]]: keeps [[Weekly Calendar]] current from chats |
+| `/canvas-sync` | [[Skill - Canvas Sync]]: keeps course deadlines, files and readings current from Canvas | <!-- if:school -->
 | obsidian-chat-capture (optional) | saves chats to `11 AI Chats`; index in [[AI Chats MOC]] |
 
 Folder guide: [[About AI Drafts]]

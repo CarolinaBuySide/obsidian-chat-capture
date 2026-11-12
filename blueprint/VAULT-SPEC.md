@@ -55,7 +55,7 @@ It also adds a row to School MOC, School Library, Calendar MOC and Color Key, a 
 
 - `AGENTS.md` (root, the real operating manual), and `CLAUDE.md` (`@AGENTS.md`).
 - Context: `00 Home/AI Context.md`, `Agent/USER.md`, `Top of Mind.md`, append-only `Agent/Agent Memory.md`, and `Goals`, `Principles` and `Writing Style`.
-- Skills: the notes in `00 Home/Agent/Skills/` are the canonical instructions: Todays Focus, Weekly Review, Process Notes, Ingest, Vault Health, Write Like Me and Calendar Update. `.claude/skills/<name>/SKILL.md` are small pointers, so Claude Code gets `/todays-focus` and the rest. `vault-health/scripts/vault_health.py` does the checking. Each skill note ends with a `## Retro log`.
+- Skills: the notes in `00 Home/Agent/Skills/` are the canonical instructions: Todays Focus, Weekly Review, Process Notes, Ingest, Vault Health, Write Like Me, Calendar Update and, for students, Canvas Sync. `.claude/skills/<name>/SKILL.md` are small pointers, so Claude Code gets `/todays-focus` and the rest. `vault-health/scripts/vault_health.py` does the checking. Each skill note ends with a `## Retro log`.
 - Free-write zones are `01 Fleeting/AI Drafts`, `11 AI Chats`, `13 Calendar` (through the calendar skill), today's daily note and Top of Mind. Everywhere else, agents append or propose.
 
 ## Properties
@@ -79,11 +79,20 @@ How AI chats end up in `11 AI Chats`, as in the original:
 - **Cloud apps** can't reach the computer, so the skill ends with a copy-ready block that starts `obsidian-capture: <path>`. On macOS a small login item (`clip_capture.py`) watches the clipboard and saves those blocks.
 - `scripts/setup_chat_capture.py` sets all of this up and tests it.
 
+## Canvas sync
+
+For students. It makes the vault match Canvas, as in the original: assignment deadlines go into each course map (added, moved, checked off), new files go into the course's numbered folders and its Materials note, each new lecture deck gets a searchable note, readings become prep tasks, and new announcements are listed for the AI to turn into tasks and class changes. Canvas is only ever read.
+
+- **Any AI with a terminal can run it.** `13 Calendar/System/canvas-sync/sync.py` has five commands: `setup`, `plan`, `apply`, `finish`, `status`. `plan` changes nothing; `apply` makes a Git checkpoint first, never overwrites a file and skips any note edited since the plan.
+- **Canvas is read with the user's own access token** (`canvas_api.py login`), stored outside the vault in `~/.config/obsidian-canvas-sync/config.json`. Any Canvas site works; several sites can be connected.
+- **Browser reader:** `fetch_canvas.js` and `file_links.js` read the same data from a logged-in Canvas tab, for schools that turn off tokens. Both readers produce the same file.
+- **Different from the original:** the original starts from a button wired to a Perplexity automation and reads Canvas through a logged-in browser. Here the token reader is the default, and the button on the To-Do Calendar copies a request to paste into any AI. The planner (`canvas_sync.py`) is the original's, unchanged apart from names. The Perplexity webhook still works if its config file exists.
+
 ## How close this is to the original
 
 The template was last compared file by file with the live vault on **2026-11-11**.
 
-**The same:** the fourteen numbered folders; every dashboard in `00 Home`; the vault `AGENTS.md`, `CLAUDE.md` and `.claude/settings.json`; the seven skill notes and their slash-command pointers; `vault_health.py`; every template in `09 Templates`; both calendar views and `add_event.py`; the Graph Groups plugin and its layout; graph forces and color groups; the `color-coding` CSS snippet; Dataview, Templater, Calendar and Git plugin settings; app, appearance, core-plugin, daily-note, template, bookmark and property-type settings; `.gitignore`. Differences in those files are only names, example course codes and dates.
+**The same:** the fourteen numbered folders; every dashboard in `00 Home`; the vault `AGENTS.md`, `CLAUDE.md` and `.claude/settings.json`; the skill notes and their slash-command pointers; the Canvas sync planner; `vault_health.py`; every template in `09 Templates`; both calendar views and `add_event.py`; the Graph Groups plugin and its layout; graph forces and color groups; the `color-coding` CSS snippet; Dataview, Templater, Calendar and Git plugin settings; app, appearance, core-plugin, daily-note, template, bookmark and property-type settings; `.gitignore`. Differences in those files are only names, example course codes and dates.
 
 **Yours instead of the original's:** your name, areas, courses, term and colors, taken from the interview. `About me`, `Goals`, `Principles`, `Writing Style`, `USER`, `Top of Mind` and `Agent Memory` start as short drafts.
 
@@ -92,7 +101,6 @@ The template was last compared file by file with the live vault on **2026-11-11*
 | Left out | Why |
 |---|---|
 | Notes, course files, chats and events | Personal |
-| Canvas Sync (skill note, sync script, the "Sync from Canvas" bar) | Tied to one school's Canvas and a Perplexity automation. The bar hides itself when sync isn't set up |
 | `.chat-sync/` ledger | Bookkeeping for a nightly Perplexity scheduled task that swept the day's chats into the vault. It only works in Perplexity; here each chat saves itself through the skill |
 | `12 School/_Admin & Calendars`, `_Course not identified`, `_Duplicates to review` | Leftovers from importing years of old files; a new vault has nothing to sort |
 | Smart Connections | Optional (`--smart-connections`) |

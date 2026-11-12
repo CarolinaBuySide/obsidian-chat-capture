@@ -11,6 +11,12 @@ Close Obsidian first, because it rewrites `graph.json` from memory. To do it by 
 ## File course material
 Save the file in the matching numbered subfolder, then add a line under that folder's heading in the course's Materials note, for example `- [[Lecture 3.pptx|Lecture 3]] · PowerPoint`. Keep the newest version at the top and move older drafts into an `Older versions` subfolder.
 
+## Canvas
+- **Connect or reconnect:** `python3 "13 Calendar/System/canvas-sync/canvas_api.py" login --host <school>.instructure.com` (you type the token), then `python3 "13 Calendar/System/canvas-sync/sync.py" setup`.
+- **Sync:** ask any AI with a terminal on your computer to "sync from Canvas"; it follows `Skill - Canvas Sync`.
+- **New term:** add the courses, then run `sync.py setup` again.
+- **Disconnect:** `canvas_api.py logout --host …`, and delete the token in Canvas.
+
 ## Add a break, exam or class change
 ```bash
 python3 "13 Calendar/System/add_event.py" add --title "Fall Break" --date 2026-10-15 --end-date 2026-10-16 --kind break --no-class

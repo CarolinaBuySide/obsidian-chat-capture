@@ -39,7 +39,8 @@ The scripts use only Python's standard library. If you'd rather click, skip the 
 | **To-Do Calendar** | A month grid of every dated task (assignments, exams, readings, to-dos), with filters and check-off in place |
 | **Courses** | Each course gets a course map, a folder with eight numbered subfolders, a Materials note linking every file, a class note and a prep note, all in one color. Finished courses move to Past Courses and turn gray |
 | **Graph** | The bundled Graph Groups plugin pins Home in the center and lays out each area and course as its own colored starburst |
-| **AI layer** | `AGENTS.md` (read order, permissions table, how AI work is marked, conventions), AI Context, USER, Top of Mind, an append-only Agent Memory, and seven skills (Todays Focus, Weekly Review, Process Notes, Ingest, Vault Health, Write Like Me, Calendar Update), also available as Claude Code slash commands |
+| **AI layer** | `AGENTS.md` (read order, permissions table, how AI work is marked, conventions), AI Context, USER, Top of Mind, an append-only Agent Memory, and eight skills (Todays Focus, Weekly Review, Process Notes, Ingest, Vault Health, Write Like Me, Calendar Update, and Canvas Sync for students), also available as Claude Code slash commands |
+| **Canvas sync** | For students: pulls deadlines, new files, lecture decks and readings from any school's Canvas into the course maps, folders and calendars. Runs from a terminal with your own Canvas access token, so any AI can do it |
 | **Calendar tool** | `add_event.py`, so any AI with a shell can add, move, cancel or list events and log each change |
 | **Safety net** | Agents append instead of overwriting, anything they write is tagged `ai-assisted` until you review it, and Obsidian Git takes local snapshots every 30 minutes |
 
@@ -58,6 +59,7 @@ scripts/
   install_plugins.py       Dataview, Templater, Calendar, Git, Local REST API (Graph Groups is bundled)
   obsidian_setup.py        register the vault, turn plugins on, check it renders in the app
   setup_chat_capture.py    test saving, connect AI apps, install the clipboard watcher
+tests/                     fake Canvas and an end-to-end test of the Canvas sync
 skills/
   obsidian-vault-builder/  Agent Skill wrapper for this blueprint
   obsidian-chat-capture/   Agent Skill that saves chat takeaways into 11 AI Chats
@@ -75,11 +77,11 @@ Details for each app are in [`setup.md`](skills/obsidian-chat-capture/references
 
 ## What's tested
 
-Built on Linux with Obsidian 1.15.0 on 2026-11-11: student and non-student builds pass `verify_vault.py`; `obsidian_setup.py check` passes inside the running app (all six plugins loaded, colors on, Templater filling new notes, Home and both calendars rendering, REST API answering); `setup_chat_capture.py test` writes, reads back and deletes a note; `add_event.py` adds and lists events. Not yet run: `obsidian_setup.py` and the clipboard-watcher installer on a Mac (the Obsidian commands they use were run by hand on macOS with Obsidian 1.13.7, and the watcher's login item matches the one on the original Mac), and anything on Windows.
+Built on Linux with Obsidian 1.15.0 on 2026-11-11: student and non-student builds pass `verify_vault.py`; `obsidian_setup.py check` passes inside the running app (all six plugins loaded, colors on, Templater filling new notes, Home and both calendars rendering, REST API answering); `setup_chat_capture.py test` writes, reads back and deletes a note; `add_event.py` adds and lists events. The Canvas sync passes `tests/run_canvas_test.sh` against a fake Canvas (first sync, a no-change sync, a moved due date and a new deck), and its token reader returns the same data as the original browser reader on that fake. It has not been run against a real school's Canvas in this form; the planner inside it is the one the original vault runs. Not yet run: `obsidian_setup.py` and the clipboard-watcher installer on a Mac (the Obsidian commands they use were run by hand on macOS with Obsidian 1.13.7, and the watcher's login item matches the one on the original Mac), and anything on Windows.
 
 ## Privacy
 
-The template has no personal data. `build_vault.py`, `install_plugins.py` and `verify_vault.py` only touch the destination folder, and the build refuses a folder that already has files. `obsidian_setup.py register` edits Obsidian's own settings file and `setup_chat_capture.py connect` edits the AI app's config; both keep a backup. Nothing is uploaded. Never commit API keys; `.gitignore` covers common config files.
+The template has no personal data. The Canvas token is typed by you into a hidden prompt and saved outside the vault; the sync only reads Canvas. `build_vault.py`, `install_plugins.py` and `verify_vault.py` only touch the destination folder, and the build refuses a folder that already has files. `obsidian_setup.py register` edits Obsidian's own settings file and `setup_chat_capture.py connect` edits the AI app's config; both keep a backup. Nothing is uploaded. Never commit API keys; `.gitignore` covers common config files.
 
 ## License
 

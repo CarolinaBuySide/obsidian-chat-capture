@@ -13,6 +13,8 @@ tags:
 
 **To-dos by month:** [[To-Do Calendar]] shows assignments, exams, pre-class prep (one Prep note per course, listed under Classes) and other dated to-dos ([[To-Do]]).
 
+**Canvas sync:** any AI with a terminal on this computer can pull new Canvas deadlines, date changes, files, readings and class changes into the course maps and prep notes ([[Skill - Canvas Sync]]). <!-- if:school -->
+
 ## Classes <!-- if:school -->
 | | Class | Meets | Room | Prep | <!-- if:school -->
 |---|---|---|---|---| <!-- if:school -->

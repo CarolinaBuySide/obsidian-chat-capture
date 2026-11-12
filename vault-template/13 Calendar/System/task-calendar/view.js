@@ -523,10 +523,10 @@ function button(parent, text, title, onClick, cls) {
 }
 
 // ---- Canvas sync bar (month view) ----
-// Shows when Canvas was last synced and, on the Mac, a "Sync from Canvas" button that starts the Perplexity
-// automation "Canvas → Obsidian calendar sync" (procedure: 00 Home/Agent/Skills/Skill - Canvas Sync.md).
-// The automation's webhook address and key live outside the vault in ~/.config/perplexity/canvas-sync.json
-// and are never shown. Other devices just see the status line.
+// Shows when Canvas was last synced (procedure: 00 Home/Agent/Skills/Skill - Canvas Sync.md) and a
+// "Copy sync request" button: paste the copied request into any AI that can run commands on this computer.
+// Optional: if ~/.config/perplexity/canvas-sync.json holds a Perplexity automation webhook (url and token,
+// kept outside the vault and never shown), the button starts that automation instead.
 const SYNC_STATE = "13 Calendar/System/canvas-sync/state.json";
 const SYNC_SKILL = "00 Home/Agent/Skills/Skill - Canvas Sync.md";
 const SYNC_ASKED = "canvas-sync-requested";
@@ -547,8 +547,8 @@ function notify(msg) {
 function syncAsked() { const v = Number(window.localStorage.getItem(SYNC_ASKED) || 0); return Number.isFinite(v) ? v : 0; }
 function clock(t) { return t.toFormat("h:mm a").replace(":00 ", " ").toLowerCase(); }
 function renderSyncBar(root) {
-  // Optional Canvas sync: hidden unless a sync has run here or this device has the webhook config.
-  if (!syncConfig() && !app.vault.getAbstractFileByPath(SYNC_STATE)) return async () => {};
+  // Hidden in vaults without the Canvas sync (no skill note, no past sync, no webhook config).
+  if (!syncConfig() && !app.vault.getAbstractFileByPath(SYNC_STATE) && !app.vault.getAbstractFileByPath(SYNC_SKILL)) return async () => {};
   const bar = root.createDiv({ cls: "mtc-sync" });
   const status = bar.createSpan({ cls: "mtc-sync-status", text: "Canvas: checking the last sync…" });
   const cfg = syncConfig();
@@ -595,6 +595,12 @@ function renderSyncBar(root) {
     }, "mod-cta");
   } else {
     if (app.vault.getAbstractFileByPath(SYNC_SKILL)) {
+      button(bar, "Copy sync request", "Copy a request to paste into any AI that can run commands on this computer", async () => {
+        const base = app.vault.adapter && app.vault.adapter.basePath ? app.vault.adapter.basePath : app.vault.getName();
+        const ask = `Sync my Obsidian vault from Canvas. The vault is at "${base}". Read "00 Home/Agent/Skills/Skill - Canvas Sync.md" in it and follow it exactly, then tell me what changed.`;
+        try { await navigator.clipboard.writeText(ask); notify("Copied. Paste it into your AI to sync from Canvas."); }
+        catch (e) { notify("Couldn't copy. Ask your AI to follow the Canvas Sync skill note."); }
+      });
       const how = bar.createSpan({ cls: "mtc-sync-how", text: "How to sync" });
       how.addEventListener("click", (ev) => open(SYNC_SKILL, ev));
     }
