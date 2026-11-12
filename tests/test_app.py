@@ -37,7 +37,10 @@ def py(*args, env=None, ok_codes=(0,), stdin=None):
 
 def install():
     """Download and install the latest Obsidian. Returns (executable, command-line tool or None)."""
-    rel = json.load(urllib.request.urlopen("https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest"))
+    req = urllib.request.Request("https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest")
+    if os.environ.get("GITHUB_TOKEN"):
+        req.add_header("Authorization", "Bearer " + os.environ["GITHUB_TOKEN"])
+    rel = json.load(urllib.request.urlopen(req))
     ver = rel["tag_name"].lstrip("v")
     asset = lambda name: next(a["browser_download_url"] for a in rel["assets"] if a["name"] == name)
     dl = T / "dl"; dl.mkdir()

@@ -1118,7 +1118,7 @@ def main():
             continue
         out_file = os.path.join(args.out, "files", path)
         os.makedirs(os.path.dirname(out_file), exist_ok=True)
-        with open(out_file, "w", encoding="utf-8") as f:
+        with open(out_file, "w", encoding="utf-8", newline="\n") as f:
             f.write(after if after.endswith("\n") or n["before"] is not None else after + "\n")
         with open(out_file, encoding="utf-8") as f:
             written = f.read()

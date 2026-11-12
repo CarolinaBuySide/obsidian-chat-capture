@@ -14,6 +14,12 @@ import argparse, datetime, json, pathlib, re, shutil, subprocess, sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from new_course import add_course, slug
 
+if os.name == "nt":  # Obsidian notes use plain \n line endings; stop Windows from writing \r\n
+    def _write_lf(self, data, encoding="utf-8", errors=None, newline=None):
+        with open(self, "w", encoding=encoding, errors=errors, newline="\n") as f:
+            return f.write(data)
+    pathlib.Path.write_text = _write_lf
+
 REPO = pathlib.Path(__file__).resolve().parent.parent
 TEMPLATE = REPO / "vault-template"
 TEXT = {".md", ".json", ".css", ".js", ".py", ".base"}

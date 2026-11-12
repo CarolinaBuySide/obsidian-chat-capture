@@ -14,6 +14,12 @@ Standard library only; works on macOS, Windows and Linux.
 import os
 import argparse, io, json, pathlib, sys, tarfile, urllib.request
 
+if os.name == "nt":  # Obsidian notes use plain \n line endings; stop Windows from writing \r\n
+    def _write_lf(self, data, encoding="utf-8", errors=None, newline=None):
+        with open(self, "w", encoding=encoding, errors=errors, newline="\n") as f:
+            return f.write(data)
+    pathlib.Path.write_text = _write_lf
+
 REPOS = {
     "dataview": "blacksmithgu/obsidian-dataview",
     "templater-obsidian": "SilentVoid13/Templater",

@@ -38,6 +38,12 @@ DEFAULTS = {
 sys.path.insert(0, str(HERE))
 import canvas_api  # noqa: E402
 
+if os.name == "nt":  # Obsidian notes use plain \n line endings; stop Windows from writing \r\n
+    def _write_lf(self, data, encoding="utf-8", errors=None, newline=None):
+        with open(self, "w", encoding=encoding, errors=errors, newline="\n") as f:
+            return f.write(data)
+    pathlib.Path.write_text = _write_lf
+
 
 def sha(b):
     return hashlib.sha256(b).hexdigest()
@@ -245,7 +251,7 @@ def apply(x):
         if c.get("sha256_before") is None:
             if dest.exists():
                 problems += 1; print(f"  SKIP  {c['path']}: a note is already there"); continue
-        elif not dest.is_file() or sha(dest.read_bytes()) != c["sha256_before"]:
+        elif not dest.is_file() or sha(dest.read_bytes().replace(b"\r\n", b"\n")) != c["sha256_before"]:
             problems += 1; print(f"  SKIP  {c['path']}: it changed since the plan was made. Run plan and apply again"); continue
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(new)

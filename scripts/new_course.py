@@ -20,6 +20,12 @@ Standard library only. Never overwrites an existing course.
 import os
 import argparse, datetime, json, pathlib, re, sys
 
+if os.name == "nt":  # Obsidian notes use plain \n line endings; stop Windows from writing \r\n
+    def _write_lf(self, data, encoding="utf-8", errors=None, newline=None):
+        with open(self, "w", encoding=encoding, errors=errors, newline="\n") as f:
+            return f.write(data)
+    pathlib.Path.write_text = _write_lf
+
 SUBFOLDERS = ["01 Syllabus & Schedule", "02 Lecture Slides", "03 Readings & Cases", "04 Assignments",
               "05 Models & Data", "06 Exams & Review", "07 My Work", "08 Other"]
 DAY_WORDS = {"Mon": "Mondays", "Tue": "Tuesdays", "Wed": "Wednesdays", "Thu": "Thursdays", "Fri": "Fridays", "Sat": "Saturdays", "Sun": "Sundays"}

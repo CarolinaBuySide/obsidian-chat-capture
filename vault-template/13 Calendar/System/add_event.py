@@ -283,7 +283,7 @@ class Vault:
             die(f"refusing to rewrite a note outside {CAL_DIR}: {rel}")
         try:
             tmp = self.abs(rel) + ".tmp"
-            with open(tmp, "w", encoding="utf-8") as f:
+            with open(tmp, "w", encoding="utf-8", newline="\n") as f:
                 f.write(text)
             os.replace(tmp, self.abs(rel))
             return "file"
