@@ -205,9 +205,15 @@ try:
 
     if X.watcher and SYSTEM == "Darwin":
         step("5b. Clipboard watcher (macOS)")
+        (pathlib.Path.home() / "Library/Logs/obsidian-clip-capture.log").unlink(missing_ok=True) if sys.version_info >= (3, 8) else None
         py(REPO / "scripts/setup_chat_capture.py", "watcher", V)
         block = "obsidian-capture: 11 AI Chats/2026-01-03 - Clipboard Test Chat.md\n---\ntype: ai-chat\ntags: [ai-chat]\n---\n# Clipboard Test Chat\n\n- Related: [[AI Chats MOC]]\n"
         target = V / "11 AI Chats/2026-01-03 - Clipboard Test Chat.md"
+        wlog = pathlib.Path.home() / "Library/Logs/obsidian-clip-capture.log"
+        for _ in range(60):  # the watcher ignores whatever was copied before it started, so wait for it
+            if wlog.is_file() and "started" in wlog.read_text(errors="replace"):
+                break
+            time.sleep(1)
         for _ in range(12):
             subprocess.run(["pbcopy"], input=block, text=True, check=True)
             time.sleep(5)
